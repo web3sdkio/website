@@ -1,0 +1,13 @@
+# *
+User-agent: *
+Allow: /
+
+# *
+User-agent: *
+Disallow: /_og
+
+# Host
+Host: https://web3sdk.io
+
+# Sitemaps
+Sitemap: https://web3sdk.io/sitemap.xml
