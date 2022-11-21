@@ -16,10 +16,10 @@ const SolanaFaucet: Web3sdkioNextPage = () => {
     <>
       <NextSeo
         title="Solana (SOL) Faucet | web3sdkio"
-        description="Get Solana devnet tokens for free—using our fast and reliable Solana Faucet for blockchain developers. Powered by web3sdkio."
+        description="Get Solana devnet tokens for free—using our fast and reliable Solana Faucet for blockchain developers building web3 apps. Powered by web3sdkio."
         openGraph={{
           title:
-            "Get Solana devnet tokens for free—using our fast and reliable Solana Faucet for blockchain developers. Powered by web3sdkio.",
+            "Get Solana devnet tokens for free—using our fast and reliable Solana Faucet for blockchain developers building web3 apps. Powered by web3sdkio.",
           url: `https://web3sdk.io/faucet/solana`,
         }}
       />
@@ -30,9 +30,9 @@ const SolanaFaucet: Web3sdkioNextPage = () => {
         mx="auto"
         px={{ base: 0, md: 4 }}
       >
-        <Heading>Solana faucet</Heading>
-        <Heading fontSize="20px" my="4">
-          Get Solana devnet tokens for free
+        <Heading as="h1">Solana Faucet</Heading>
+        <Heading fontSize="20px" my="4" as="h2">
+          Get Solana devnet tokens for free to build your blockchain app.
         </Heading>
         {!transactionLink ? (
           <FormComponent

@@ -1,5 +1,6 @@
 import {
   CONTRACTS_MAP,
+  ChainId,
   ContractType,
   FullPublishMetadata,
   Role,
@@ -93,7 +94,6 @@ export const BuiltinContractMap: Record<ContractType, BuiltinContractDetails> =
       description: "One NFT, one owner",
       erc: "ERC721",
       audit: "ipfs://QmNgNaLwzgMxcx9r6qDvJmTFam6xxUxX7Vp8E99oRt7i74",
-
       sourceUrl:
         "https://raw.githubusercontent.com/web3sdkio/contracts/v3.1.3/contracts/drop/DropERC721.sol",
       ecosytem: "evm",
@@ -103,7 +103,6 @@ export const BuiltinContractMap: Record<ContractType, BuiltinContractDetails> =
       description: "ERC721A NFTs that other people can claim",
       erc: "ERC721A",
       audit: "ipfs://QmWfueeKQrggrVQNjWkF4sYJECp56vNnuAXCPVecFFKz2j",
-
       sourceUrl:
         "https://raw.githubusercontent.com/web3sdkio/contracts/v3.1.3/contracts/signature-drop/SignatureDrop.sol",
       ecosytem: "evm",
@@ -165,6 +164,7 @@ export const BuiltinContractMap: Record<ContractType, BuiltinContractDetails> =
     split: buildContractForContractMap("split", {
       title: "Split",
       description: "Fee splitting for your primary sales and royalties",
+      audit: "ipfs://QmaMiezCMfmo5zWmwNc2WXLex11BuRZJ9p9ZhWj638Tdws",
       sourceUrl:
         "https://raw.githubusercontent.com/web3sdkio/contracts/v3.1.3/contracts/Split.sol",
       ecosytem: "evm",
@@ -181,6 +181,7 @@ export const BuiltinContractMap: Record<ContractType, BuiltinContractDetails> =
     vote: buildContractForContractMap("vote", {
       title: "Vote",
       description: "On-chain ERC20-based voting",
+      audit: "ipfs://QmaMiezCMfmo5zWmwNc2WXLex11BuRZJ9p9ZhWj638Tdws",
       sourceUrl:
         "https://raw.githubusercontent.com/web3sdkio/contracts/v3.1.3/contracts/vote/VoteERC20.sol",
       ecosytem: "evm",
@@ -398,12 +399,13 @@ export const ROLE_DESCRIPTION_MAP: Record<Role | string, string> = {
 // gnosis mappings
 export const GNOSIS_TO_CHAIN_ID = {
   // supported mainnets
-  eth: 1,
-  matic: 137,
-  avax: 43114,
+  eth: ChainId.Mainnet,
+  matic: ChainId.Polygon,
+  avax: ChainId.Avalanche,
+  bnb: ChainId.BinanceSmartChainMainnet,
+  oeth: ChainId.Optimism,
   // supported testnets
-  rin: 4,
-  gor: 5,
+  gor: ChainId.Goerli,
 } as const;
 
 export const CHAIN_ID_TO_GNOSIS = Object.entries(GNOSIS_TO_CHAIN_ID).reduce(

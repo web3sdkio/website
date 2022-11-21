@@ -1,4 +1,5 @@
 import { Card } from "./card";
+import { ChakraNextLink } from "./link";
 import { Text } from "./text";
 import { convertFontSizeToCSSVar } from "./utils/typography";
 import {
@@ -17,8 +18,7 @@ import {
 } from "@chakra-ui/react";
 import { Link as LocationLink, useMatch } from "@tanstack/react-location";
 import { useTrack } from "hooks/analytics/useTrack";
-import NextLink from "next/link";
-import React from "react";
+import React, { useEffect } from "react";
 import { FiCopy, FiExternalLink } from "react-icons/fi";
 import { fontWeights, letterSpacings, lineHeights } from "theme/typography";
 import { shortenIfAddress } from "utils/usedapp-external";
@@ -126,16 +126,15 @@ export const LinkButton = React.forwardRef<HTMLButtonElement, LinkButtonProps>(
     }
 
     return (
-      <NextLink href={href} passHref>
-        <Button
-          as={Link}
-          ref={ref}
-          {...restButtonProps}
-          textDecoration="none!important"
-        >
-          {children}
-        </Button>
-      </NextLink>
+      <Button
+        as={ChakraNextLink}
+        href={href}
+        ref={ref}
+        {...restButtonProps}
+        textDecoration="none!important"
+      >
+        {children}
+      </Button>
     );
   },
 );
@@ -185,7 +184,14 @@ export const AddressCopyButton: React.FC<AddressCopyButtonProps> = ({
   tokenId,
   ...restButtonProps
 }) => {
-  const { onCopy } = useClipboard(address || "");
+  const { onCopy, setValue } = useClipboard(address || "");
+
+  useEffect(() => {
+    if (address) {
+      setValue(address);
+    }
+  }, [address, setValue]);
+
   const trackEvent = useTrack();
   const toast = useToast();
 

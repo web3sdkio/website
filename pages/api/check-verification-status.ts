@@ -1,5 +1,4 @@
 import { apiKeyMap, apiMap } from "./verify";
-import { withSentry } from "@sentry/nextjs";
 import { ChainId } from "@web3sdkio/sdk/evm";
 import { NextApiRequest, NextApiResponse } from "next";
 
@@ -29,4 +28,4 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   }
 };
 
-export default withSentry(handler);
+export default handler;

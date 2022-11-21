@@ -16,6 +16,7 @@ const COMMANDS = {
   install: {
     javascript: "npm install @web3sdkio/sdk ethers",
     react: "npm install @web3sdkio/react @web3sdkio/sdk ethers",
+    web3button: "npm install @web3sdkio/react @web3sdkio/sdk ethers",
     python: "pip install web3sdkio-sdk",
     go: "go get github.com/web3sdkio/go-sdk/web3sdkio",
   },
@@ -27,8 +28,23 @@ const contract = await sdk.getContract("{{contract_address}}");`,
     react: `import { useContract } from "@web3sdkio/react";
 
 export default function Component() {
-  const { contract } = useContract("{{contract_address}}");
+  // While isLoading is true, contract is undefined.
+  const { contract, isLoading, error } = useContract("{{contract_address}}");
   // Now you can use the contract in the rest of the component
+}`,
+    web3button: `import { Web3Button } from "@web3sdkio/react";
+
+export default function Component() {
+  return (
+    <Web3Button
+      contractAddress="{{contract_address}}"
+      action={(contract) => {
+        // Any action with your contract
+      }}
+    >
+      Do something
+    </Web3Button>
+  )
 }`,
     python: `from web3sdkio import Web3sdkioSDK
 
@@ -67,6 +83,20 @@ export default function Component() {
       console.error("contract call failure", err);
     }
   }
+}`,
+    web3button: `import { Web3Button } from "@web3sdkio/react";
+
+export default function Component() {
+  return (
+    <Web3Button
+      contractAddress="{{contract_address}}"
+      action={(contract) => {
+        contract.call("{{function}}", {{args}})
+      }}
+    >
+      {{function}}
+    </Web3Button>
+  )
 }`,
     python: `data = contract.call("{{function}}", {{args}})`,
     go: `data, err := contract.Call("{{function}}", {{args}})`,
@@ -158,7 +188,7 @@ export const CodeOverview: React.FC<CodeOverviewProps> = ({ contract }) => {
         </Flex>
         <Text>
           Once you setup your contract, you can read data from contract
-          functions as follows.
+          functions as follows:
         </Text>
         <Flex>
           <Box>
@@ -193,7 +223,7 @@ export const CodeOverview: React.FC<CodeOverviewProps> = ({ contract }) => {
           <Heading size="title.sm">Writing Data</Heading>
         </Flex>
         <Text>
-          And you can also make write function calls with the following setup
+          And you can also make write function calls with the following setup:
         </Text>
         <Flex>
           <Box>

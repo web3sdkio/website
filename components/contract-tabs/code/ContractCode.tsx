@@ -68,7 +68,8 @@ const INSTALL_COMMANDS = {
 
 const CREATE_APP_COMMANDS = {
   evm: "npx web3sdkio@latest create --app",
-  solana: "npx web3sdkio create --template next-typescript-solana-starter",
+  solana:
+    "npx web3sdkio@latest create --template next-typescript-solana-starter",
 };
 
 export const ContractCode: React.FC<IContractCode> = ({
@@ -167,7 +168,11 @@ export const ContractCode: React.FC<IContractCode> = ({
               <Text>First, install the latest version of the SDK.</Text>
               <CodeBlock
                 language="bash"
-                code={INSTALL_COMMANDS[ecosystem][environment]}
+                code={
+                  INSTALL_COMMANDS[ecosystem][
+                    environment !== "web3button" ? environment : "react"
+                  ]
+                }
               />
             </>
           )}

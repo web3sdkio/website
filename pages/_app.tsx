@@ -8,26 +8,21 @@ import {
   Persister,
 } from "@tanstack/react-query-persist-client";
 import { shouldNeverPersistQuery } from "@web3sdkio/react";
-import { AnnouncementBanner } from "components/notices/AnnouncementBanner";
+// import { AnnouncementBanner } from "components/notices/AnnouncementBanner";
 import { BigNumber } from "ethers";
 import { NextPage } from "next";
+import PlausibleProvider from "next-plausible";
 import { DefaultSeo } from "next-seo";
 import type { AppProps } from "next/app";
 import { useRouter } from "next/router";
 import NProgress from "nprogress";
 import { PageId } from "page-id";
 import posthog from "posthog-js";
-import React, {
-  ReactElement,
-  ReactNode,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
+import { ReactElement, ReactNode, useEffect, useRef, useState } from "react";
 import { generateBreakpointTypographyCssVars } from "tw-components/utils/typography";
 import { isBrowser } from "utils/isBrowser";
 
-const __CACHE_BUSTER = "v3.2.6-dev-d92ce32";
+const __CACHE_BUSTER = "v3.5.1";
 
 export function bigNumberReplacer(_key: string, value: any) {
   // if we find a BigNumber then make it into a string (since that is safe)
@@ -72,7 +67,7 @@ const persister: Persister = createSyncStoragePersister({
       bigNumberReplacer,
     );
   },
-  key: `tw-query-cache:${__CACHE_BUSTER}`,
+  key: `tw-query-cache`,
 });
 
 function ConsoleApp({ Component, pageProps }: AppPropsWithLayout) {
@@ -92,6 +87,21 @@ function ConsoleApp({ Component, pageProps }: AppPropsWithLayout) {
   );
 
   const router = useRouter();
+
+  useEffect(() => {
+    // Taken from StackOverflow. Trying to detect both Safari desktop and mobile.
+    const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+    if (isSafari) {
+      // This is kind of a lie.
+      // We still rely on the manual Next.js scrollRestoration logic.
+      // However, we *also* don't want Safari grey screen during the back swipe gesture.
+      // Seems like it doesn't hurt to enable auto restore *and* Next.js logic at the same time.
+      history.scrollRestoration = "auto";
+    } else {
+      // For other browsers, let Next.js set scrollRestoration to 'manual'.
+      // It seems to work better for Chrome and Firefox which don't animate the back swipe.
+    }
+  }, []);
 
   useEffect(() => {
     // setup route cancellation
@@ -179,13 +189,24 @@ function ConsoleApp({ Component, pageProps }: AppPropsWithLayout) {
   }
 
   return (
-    <PersistQueryClientProvider
-      client={queryClient}
-      persistOptions={{ persister }}
+    <PlausibleProvider
+      domain="web3sdk.io"
+      customDomain="https://pl.web3sdk.io"
+      selfHosted
     >
-      <Hydrate state={pageProps.dehydratedState}>
-        <Global
-          styles={css`
+      <PersistQueryClientProvider
+        client={queryClient}
+        persistOptions={{
+          persister,
+          buster: __CACHE_BUSTER,
+          dehydrateOptions: {
+            shouldDehydrateQuery: (q) => !shouldNeverPersistQuery(q.queryKey),
+          },
+        }}
+      >
+        <Hydrate state={pageProps.dehydratedState}>
+          <Global
+            styles={css`
             #walletconnect-wrapper {
               color: #000;
             }
@@ -233,49 +254,49 @@ function ConsoleApp({ Component, pageProps }: AppPropsWithLayout) {
                   -ms-transform: rotate(3deg) translate(0px, -4px);
                       transform: rotate(3deg) translate(0px, -4px);
           `}
-        />
-        <DefaultSeo
-          defaultTitle="Web3 SDKs for developers ⸱ No-code for NFT artists | web3sdkio"
-          titleTemplate="%s | web3sdkio"
-          description="Build web3 apps easily. Implement web3 features with powerful SDKs for developers. Drop NFTs with no code. — Ethereum, Polygon, Avalanche, & more."
-          additionalLinkTags={[
-            {
-              rel: "icon",
-              href: "/favicon.ico",
-            },
-          ]}
-          openGraph={{
-            title:
-              "Web3 SDKs for developers ⸱ No-code for NFT artists | web3sdkio",
-            description:
-              "Build web3 apps easily. Implement web3 features with powerful SDKs for developers. Drop NFTs with no code. — Ethereum, Polygon, Avalanche, & more.",
-            type: "website",
-            locale: "en_US",
-            url: "https://web3sdk.io",
-            site_name: "web3sdkio",
-            images: [
+          />
+          <DefaultSeo
+            defaultTitle="web3sdkio: The complete web3 development framework"
+            titleTemplate="%s | web3sdkio"
+            description="Build web3 apps easily with web3sdkio's powerful SDKs, audited smart contracts, and developer tools—for Ethereum, Polygon, Solana, & more. Try now."
+            additionalLinkTags={[
               {
-                url: "https://web3sdk.io/web3sdkio.png",
-                width: 1200,
-                height: 630,
-                alt: "web3sdkio",
+                rel: "icon",
+                href: "/favicon.ico",
               },
-            ],
-          }}
-          twitter={{
-            handle: "@web3sdkio",
-            site: "@web3sdkio",
-            cardType: "summary_large_image",
-          }}
-          canonical={`https://web3sdk.io${router.asPath}`}
-        />
+            ]}
+            openGraph={{
+              title: "web3sdkio: The complete web3 development framework",
+              description:
+                "Build web3 apps easily with web3sdkio's powerful SDKs, audited smart contracts, and developer tools—for Ethereum, Polygon, Solana, & more. Try now.",
+              type: "website",
+              locale: "en_US",
+              url: "https://web3sdk.io",
+              site_name: "web3sdkio",
+              images: [
+                {
+                  url: "https://web3sdk.io/web3sdkio.png",
+                  width: 1200,
+                  height: 630,
+                  alt: "web3sdkio",
+                },
+              ],
+            }}
+            twitter={{
+              handle: "@web3sdkio",
+              site: "@web3sdkio",
+              cardType: "summary_large_image",
+            }}
+            canonical={`https://web3sdk.io${router.asPath}`}
+          />
 
-        <ChakraProvider theme={chakraTheme}>
-          <AnnouncementBanner />
-          {getLayout(<Component {...pageProps} />, pageProps)}
-        </ChakraProvider>
-      </Hydrate>
-    </PersistQueryClientProvider>
+          <ChakraProvider theme={chakraTheme}>
+            {/* <AnnouncementBanner /> */}
+            {getLayout(<Component {...pageProps} />, pageProps)}
+          </ChakraProvider>
+        </Hydrate>
+      </PersistQueryClientProvider>
+    </PlausibleProvider>
   );
 }
 export default ConsoleApp;

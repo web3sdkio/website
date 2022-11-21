@@ -100,7 +100,7 @@ const SolanaHackathon: Web3sdkioNextPage = () => {
             <Timer />
 
             <LinkButton
-              href="https://web3sdkio.typeform.com/to/zfrq8Jx0"
+              href="https://web3sdkio.typeform.com/to/jta0ye4M"
               onClick={() =>
                 trackEvent({
                   category: "solanathon",
@@ -121,7 +121,7 @@ const SolanaHackathon: Web3sdkioNextPage = () => {
               isExternal
               noIcon
             >
-              Register now
+              Submit Your Project
             </LinkButton>
           </Flex>
         </HomepageSection>

@@ -13,7 +13,9 @@ import {
   useClipboard,
 } from "@chakra-ui/react";
 import { IoMdCheckmark } from "@react-icons/all-files/io/IoMdCheckmark";
-import { ContractType, ValidContractInstance } from "@web3sdkio/sdk/evm";
+import { DropContract } from "@web3sdkio/react";
+import { useTrack } from "hooks/analytics/useTrack";
+import { useEffect, useMemo } from "react";
 import { useForm } from "react-hook-form";
 import { FiCopy } from "react-icons/fi";
 import {
@@ -26,11 +28,11 @@ import {
 } from "tw-components";
 
 interface EmbedSetupProps {
-  contract?: ValidContractInstance | null;
-  contractType?: string | null;
+  contract: DropContract;
+  ercOrMarketplace: string;
 }
 
-const IPFS_URI = "ipfs://QmPaVYdGue8zEXFKqrtVHpvzBvufM1DYzw5n1of3KVPG88";
+const IPFS_URI = "ipfs://QmTDnJmxmoeoWaMSoExAWupX6oxZer62Rndi512Dn2cSMw";
 
 interface IframeSrcOptions {
   rpcUrl: string;
@@ -58,12 +60,24 @@ const colorOptions = [
   "yellow",
 ];
 
+const isValidUrl = (url: string | undefined) => {
+  if (!url) {
+    return false;
+  }
+  try {
+    new URL(url);
+    return true;
+  } catch (e) {
+    return false;
+  }
+};
+
 const buildIframeSrc = (
-  contract?: ValidContractInstance,
-  contractType?: ContractType,
+  contract?: DropContract,
+  ercOrMarketplace?: string,
   options?: IframeSrcOptions,
 ): string => {
-  const contractEmbedHash = `${IPFS_URI}/${contractType}.html`;
+  const contractEmbedHash = `${IPFS_URI}/${ercOrMarketplace}.html`;
 
   if (!contract || !options || !contractEmbedHash || !options.chainId) {
     return "";
@@ -88,17 +102,17 @@ const buildIframeSrc = (
   url.searchParams.append("contract", contract.getAddress());
   url.searchParams.append("chainId", chainId.toString());
 
-  if (tokenId !== undefined && contractType === "edition-drop") {
+  if (tokenId !== undefined && ercOrMarketplace === "erc1155") {
     url.searchParams.append("tokenId", tokenId.toString());
   }
-  if (listingId !== undefined && contractType === "marketplace") {
+  if (listingId !== undefined && ercOrMarketplace === "marketplace") {
     url.searchParams.append("listingId", listingId.toString());
   }
   if (rpcUrl) {
     url.searchParams.append("rpcUrl", rpcUrl);
   }
-  if (relayUrl) {
-    url.searchParams.append("relayUrl", relayUrl);
+  if (isValidUrl(relayUrl)) {
+    url.searchParams.append("relayUrl", relayUrl || "");
   }
   if (biconomyApiKey) {
     url.searchParams.append("biconomyApiKey", biconomyApiKey);
@@ -120,8 +134,9 @@ const buildIframeSrc = (
 
 export const EmbedSetup: React.FC<EmbedSetupProps> = ({
   contract,
-  contractType,
+  ercOrMarketplace,
 }) => {
+  const trackEvent = useTrack();
   const { register, watch } = useForm<{
     ipfsGateway: string;
     rpcUrl: string;
@@ -149,24 +164,30 @@ export const EmbedSetup: React.FC<EmbedSetupProps> = ({
   const chainId = useDashboardEVMChainId();
   const isMobile = useBreakpointValue({ base: true, md: false });
 
-  const iframeSrc = buildIframeSrc(
-    contract as unknown as ValidContractInstance,
-    contractType as ContractType,
-    {
-      chainId,
-      ...watch(),
-    },
+  const iframeSrc = buildIframeSrc(contract, ercOrMarketplace, {
+    chainId,
+    ...watch(),
+  });
+
+  const embedCode = useMemo(
+    () =>
+      `<iframe
+    src="${iframeSrc}"
+    width="600px"
+    height="600px"
+    style="max-width:100%;"
+    frameborder="0"
+    ></iframe>`,
+    [iframeSrc],
   );
 
-  const embedCode = `<iframe
-src="${iframeSrc}"
-width="600px"
-height="600px"
-style="max-width:100%;"
-frameborder="0"
-></iframe>`;
+  const { hasCopied, onCopy, setValue } = useClipboard(embedCode, 3000);
 
-  const { hasCopied, onCopy } = useClipboard(embedCode, 3000);
+  useEffect(() => {
+    if (embedCode) {
+      setValue(embedCode);
+    }
+  }, [embedCode, setValue]);
 
   return (
     <Flex gap={8} direction="column">
@@ -179,7 +200,7 @@ frameborder="0"
             <FormLabel>IPFS Gateway</FormLabel>
             <Input type="url" {...register("ipfsGateway")} />
           </FormControl>
-          {contractType === "marketplace" ? (
+          {ercOrMarketplace === "marketplace" ? (
             <FormControl>
               <FormLabel>Listing ID</FormLabel>
               <Input type="number" {...register("listingId")} />
@@ -188,7 +209,7 @@ frameborder="0"
               </FormHelperText>
             </FormControl>
           ) : null}
-          {contractType === "edition-drop" ? (
+          {ercOrMarketplace === "erc1155" ? (
             <FormControl>
               <FormLabel>Token ID</FormLabel>
               <Input type="number" {...register("tokenId")} />
@@ -202,11 +223,10 @@ frameborder="0"
             <Input type="url" {...register("rpcUrl")} />
             <FormHelperText>
               Provide your own RPC url to use for this embed.
-              <strong>(Recommended for production use!)</strong>
             </FormHelperText>
           </FormControl>
 
-          {contractType === "marketplace" ? null : (
+          {ercOrMarketplace === "marketplace" ? null : (
             <FormControl gap={4}>
               <Heading size="title.sm" my={4}>
                 Gasless
@@ -275,7 +295,7 @@ frameborder="0"
               Used for the main actions button backgrounds.
             </FormHelperText>
           </FormControl>
-          {contractType === "marketplace" ? (
+          {ercOrMarketplace === "marketplace" ? (
             <FormControl>
               <FormLabel>Secondary Color</FormLabel>
               <Select {...register("secondaryColor")}>
@@ -305,7 +325,16 @@ frameborder="0"
             colorScheme="purple"
             w="auto"
             variant="outline"
-            onClick={onCopy}
+            onClick={() => {
+              onCopy();
+              trackEvent({
+                category: "embed",
+                action: "click",
+                label: "copy-code",
+                address: contract?.getAddress(),
+                chainId,
+              });
+            }}
             leftIcon={hasCopied ? <IoMdCheckmark /> : <FiCopy />}
           >
             {hasCopied ? "Copied!" : "Copy to clipboard"}
