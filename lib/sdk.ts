@@ -20,7 +20,9 @@ export function replaceIpfsUrl(url: string) {
 // EVM SDK
 const EVM_SDK_MAP = new Map<SUPPORTED_CHAIN_ID, EVMWeb3sdkioSDK>();
 
-export function getEVMWeb3sdkioSDK(chainId: SUPPORTED_CHAIN_ID): EVMWeb3sdkioSDK {
+export function getEVMWeb3sdkioSDK(
+  chainId: SUPPORTED_CHAIN_ID,
+): EVMWeb3sdkioSDK {
   if (EVM_SDK_MAP.has(chainId)) {
     return EVM_SDK_MAP.get(chainId) as EVMWeb3sdkioSDK;
   }
