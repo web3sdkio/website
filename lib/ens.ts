@@ -17,7 +17,11 @@ export async function resolveAddressToEnsName(
 ): Promise<ENSResolveResult> {
   invariant(utils.isAddress(address), "address must be a valid address");
 
-  const provider = getEVMWeb3sdkioSDK(ChainId.Mainnet).getProvider();
+  const provider = getEVMWeb3sdkioSDK(
+    process.env.ENS_CHAIN_ID
+      ? parseInt(process.env.ENS_CHAIN_ID)
+      : ChainId.Mainnet,
+  ).getProvider();
 
   return {
     ensName: await provider.lookupAddress(address),
@@ -30,7 +34,11 @@ export async function resolveEnsNameToAddress(
 ): Promise<ENSResolveResult> {
   invariant(isEnsName(ensName), "ensName must be a valid ens name");
 
-  const provider = getEVMWeb3sdkioSDK(ChainId.Mainnet).getProvider();
+  const provider = getEVMWeb3sdkioSDK(
+    process.env.ENS_CHAIN_ID
+      ? parseInt(process.env.ENS_CHAIN_ID)
+      : ChainId.Mainnet,
+  ).getProvider();
 
   return {
     ensName,
