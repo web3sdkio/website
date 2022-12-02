@@ -292,6 +292,9 @@ export const getStaticPaths: GetStaticPaths = async () => {
 };
 
 function generateBuildTimePaths() {
+  if (process.env.IGNORE_OFFICIAL_CONTRACT_PAGE) {
+    return [];
+  }
   return Object.values(BuiltinContractMap)
     .filter((c) => c.contractType !== "custom")
     .map((v) => ({

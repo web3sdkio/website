@@ -134,7 +134,7 @@ function ConsoleApp({ Component, pageProps }: AppPropsWithLayout) {
 
   useEffect(() => {
     // Init PostHog
-    posthog.init("phc_hKK4bo8cHZrKuAVXfXGpfNSLSJuucUnguAgt2j6dgSV", {
+    posthog.init("phc_EoOHWF7Z48tBa9ONb1j7AM0uFQ4eNbaOUdGGphgKjXX", {
       api_host: "https://a.web3sdk.io",
       autocapture: true,
       debug: false,

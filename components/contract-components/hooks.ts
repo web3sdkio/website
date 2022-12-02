@@ -606,7 +606,9 @@ function getAbsoluteUrlForSSR(path: string) {
     return path;
   }
   const url = new URL(
-    process.env.NEXT_PHASE === PHASE_PRODUCTION_BUILD
+    process.env.SSR_API_ROOT
+      ? process.env.SSR_API_ROOT
+      : process.env.NEXT_PHASE === PHASE_PRODUCTION_BUILD
       ? `https://web3sdk.io`
       : process.env.VERCEL_URL
       ? `https://${process.env.VERCEL_URL}`
