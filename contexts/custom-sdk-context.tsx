@@ -42,13 +42,13 @@ export const CustomSDKContext: ComponentWithChildren<{
 
 export const PublisherSDKContext: ComponentWithChildren = ({ children }) => (
   <CustomSDKContext
-    desiredChainId={ChainId.Mumbai}
+    desiredChainId={ChainId.Goerli}
     options={{
       gasless: {
         openzeppelin: {
           relayerUrl:
-            "https://api.defender.openzeppelin.com/autotasks/b9256c6c-adaf-492e-b80c-3f76666ad8fa/runs/webhook/b85151c8-a19d-44d0-a408-a8af2f5dc8d2/WfMncKf1bLVWUGakEQhFqE",
-          relayerForwarderAddress: "0x5Abe68be6ecE6586Bd438BE25cEed2D5707F2a95",
+            "https://api.defender.openzeppelin.com/autotasks/7d9b328d-2fc8-447d-a686-5c9b6cea8938/runs/webhook/b85151c8-a19d-44d0-a408-a8af2f5dc8d2/CThqESCM8DaxqMppFyvaTU",
+          relayerForwarderAddress: "0x91e373b8Caf9E0E0694099039Ce006aAc5598db2",
         },
         experimentalChainlessSupport: true,
       },

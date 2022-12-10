@@ -35,7 +35,7 @@
     "@tanstack/react-table": "^8.5.13",
     "@web3sdkio/chain-icons": "^1.0.0",
     "@web3sdkio/react": "^2.0.1",
-    "@web3sdkio/sdk": "^1.0.10",
+    "@web3sdkio/sdk": "^1.0.12",
     "@web3sdkio/storage": "^1.0.3",
     "ad": "^0.3.2",
     "bn.js": "^5.2.1",
