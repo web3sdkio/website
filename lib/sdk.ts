@@ -24,8 +24,8 @@ const EVM_SDK_MAP = new Map<SUPPORTED_CHAIN_ID, EVMWeb3sdkioSDK>();
 export function getEVMWeb3sdkioSDK(
   chainId: SUPPORTED_CHAIN_ID,
 ): EVMWeb3sdkioSDK {
-  if (process.env.SDK_POLYGON_CHAIN_ID && chainId === ChainId.Polygon) {
-    chainId = parseInt(process.env.SDK_POLYGON_CHAIN_ID);
+  if (process.env.NEXT_PUBLIC_SDK_POLYGON_CHAIN_ID && chainId === ChainId.Polygon) {
+    chainId = parseInt(process.env.NEXT_PUBLIC_SDK_POLYGON_CHAIN_ID);
   }
   if (EVM_SDK_MAP.has(chainId)) {
     return EVM_SDK_MAP.get(chainId) as EVMWeb3sdkioSDK;
