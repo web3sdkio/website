@@ -77,7 +77,7 @@ const Contracts: Web3sdkioNextPage = () => {
           linkProps={{
             category: "getting-started",
             label: "custom-contracts",
-            href: "https://portal.web3sdk.io/contractkit",
+            href: "https://docs.web3sdk.io/contractkit",
             isExternal: true,
             children: (
               <>
@@ -109,7 +109,7 @@ const Contracts: Web3sdkioNextPage = () => {
         <TrackedLink
           category="contracts"
           label="pre-built"
-          href="https://portal.web3sdk.io/pre-built-contracts"
+          href="https://docs.web3sdk.io/pre-built-contracts"
           isExternal
           color="blue.500"
         >
@@ -119,7 +119,7 @@ const Contracts: Web3sdkioNextPage = () => {
         <TrackedLink
           category="contracts"
           label="released"
-          href="https://portal.web3sdk.io/release"
+          href="https://docs.web3sdk.io/release"
           isExternal
           color="blue.500"
         >
@@ -129,7 +129,7 @@ const Contracts: Web3sdkioNextPage = () => {
         <TrackedLink
           category="contracts"
           label="take-quiz"
-          href="https://portal.web3sdk.io/pre-built-contracts/choosing-the-right-pre-built-contract"
+          href="https://docs.web3sdk.io/pre-built-contracts/choosing-the-right-pre-built-contract"
           isExternal
           color="blue.500"
         >
@@ -170,7 +170,7 @@ const Contracts: Web3sdkioNextPage = () => {
             colorScheme="purple"
             w={{ base: "full", md: "auto" }}
             isExternal
-            href="https://portal.web3sdk.io/deploy"
+            href="https://docs.web3sdk.io/deploy"
             size="md"
           >
             Learn more

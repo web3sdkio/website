@@ -50,7 +50,7 @@ const EXAMPLES_MAP = {
   },
   defiProtocols: {
     title: "DeFi protocols",
-    href: "https://portal.web3sdk.io/templates",
+    href: "https://docs.web3sdk.io/templates",
     svg: DefiProtocols,
   },
 } as const;

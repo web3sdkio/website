@@ -54,7 +54,7 @@ export const HomepageFooter: React.FC = () => {
                 as={LinkButton}
                 isExternal
                 noIcon
-                href="https://discord.gg/web3sdkio"
+                href="https://discord.gg/n33UhsfUKB"
                 aria-label="Discord"
                 icon={<SiDiscord fontSize="1.25rem" />}
                 category="footer"
@@ -148,7 +148,7 @@ export const HomepageFooter: React.FC = () => {
                   </TrackedLink>
                   <TrackedLink
                     isExternal
-                    href="https://portal.web3sdk.io"
+                    href="https://docs.web3sdk.io"
                     category="footer"
                     label="portal"
                   >
@@ -198,7 +198,7 @@ export const HomepageFooter: React.FC = () => {
                 <Stack spacing="3" shouldWrapChildren>
                   <TrackedLink
                     isExternal
-                    href="https://portal.web3sdk.io/typescript"
+                    href="https://docs.web3sdk.io/typescript"
                     category="footer"
                     label="javascript"
                   >
@@ -206,7 +206,7 @@ export const HomepageFooter: React.FC = () => {
                   </TrackedLink>
                   <TrackedLink
                     isExternal
-                    href="https://portal.web3sdk.io/react"
+                    href="https://docs.web3sdk.io/react"
                     category="footer"
                     label="react"
                   >
@@ -214,7 +214,7 @@ export const HomepageFooter: React.FC = () => {
                   </TrackedLink>
                   <TrackedLink
                     isExternal
-                    href="https://portal.web3sdk.io/python"
+                    href="https://docs.web3sdk.io/python"
                     category="footer"
                     label="python"
                   >
@@ -222,7 +222,7 @@ export const HomepageFooter: React.FC = () => {
                   </TrackedLink>
                   <TrackedLink
                     isExternal
-                    href="https://portal.web3sdk.io/contracts"
+                    href="https://docs.web3sdk.io/contracts"
                     category="footer"
                     label="contracts"
                   >

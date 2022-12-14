@@ -327,7 +327,7 @@ const BuiltinContractForm: React.FC<BuiltinContractFormProps> = ({
             <LinkButton
               variant="outline"
               isExternal
-              href={`https://portal.web3sdk.io/pre-built-contracts/${contractType}`}
+              href={`https://docs.web3sdk.io/pre-built-contracts/${contractType}`}
               onClick={() =>
                 trackEvent({
                   category: "learn-more-deploy",

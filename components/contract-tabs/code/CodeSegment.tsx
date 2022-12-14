@@ -127,7 +127,7 @@ export const CodeSegment: React.FC<ICodeSegment> = ({
       {activeEnvironment === "web3button" && (
         <Text>
           <TrackedLink
-            href="https://portal.web3sdk.io/ui-components/web3button"
+            href="https://docs.web3sdk.io/ui-components/web3button"
             isExternal
             category="code-tab"
             label="web3button"

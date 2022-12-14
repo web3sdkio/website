@@ -26,7 +26,7 @@ const Authentication: Web3sdkioNextPage = () => {
         title="Simple wallet sign-in for your apps"
         description="Authenticate users with just their wallet. Add web3 functionality to any application."
         buttonText="Get started"
-        buttonLink="https://portal.web3sdk.io/auth"
+        buttonLink="https://docs.web3sdk.io/auth"
         gradient="linear-gradient(147.15deg, #410AB6 30.17%, #FF8D5C 100.01%)"
         image={require("public/assets/product-pages/authentication/auth.png")}
       >
@@ -179,7 +179,7 @@ const Authentication: Web3sdkioNextPage = () => {
           <LightMode>
             <GeneralCta
               size="lg"
-              href="https://portal.web3sdk.io/auth"
+              href="https://docs.web3sdk.io/auth"
               w={{ base: "full", md: "inherit" }}
             />
           </LightMode>

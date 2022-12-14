@@ -118,7 +118,7 @@ export const AuthenticationCode: React.FC = () => {
           fontSize="20px"
           px={8}
           py={8}
-          href="https://portal.web3sdk.io/auth"
+          href="https://docs.web3sdk.io/auth"
           w={{ base: "full", md: "inherit" }}
         />
       </LightMode>

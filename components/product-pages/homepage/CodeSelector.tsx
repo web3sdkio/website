@@ -163,7 +163,7 @@ export const CodeSelector: React.FC = () => {
           _hover={{
             bg: "whiteAlpha.800",
           }}
-          href="https://portal.web3sdk.io/"
+          href="https://docs.web3sdk.io/"
           isExternal
           p={6}
           onClick={() =>

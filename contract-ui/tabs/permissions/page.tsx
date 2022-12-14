@@ -45,7 +45,7 @@ export const ContractPermissionsPage: React.FC<
           <ButtonGroup colorScheme="purple" size="sm" variant="solid">
             <LinkButton
               isExternal
-              href="https://portal.web3sdk.io/contractkit/extension-contracts/permissions"
+              href="https://docs.web3sdk.io/contractkit/extension-contracts/permissions"
             >
               Permissions
             </LinkButton>

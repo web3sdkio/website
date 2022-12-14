@@ -9,7 +9,7 @@ const sections = [
     title: "Create",
     description:
       "Bootstrap your contracts or web3 powered apps with one command.",
-    link: "https://portal.web3sdk.io/create",
+    link: "https://docs.web3sdk.io/create",
     img: require("/public/assets/landingpage/cli-create.png"),
     gradient: "linear-gradient(90.78deg, #486AC2 5.13%, #E41CA7 44.51%)",
   },
@@ -17,14 +17,14 @@ const sections = [
     title: "Release",
     description:
       "Publish contracts to the on-chain registry to enable one-click deployment for everyone.",
-    link: "https://portal.web3sdk.io/release",
+    link: "https://docs.web3sdk.io/release",
     img: require("/public/assets/landingpage/cli-release.png"),
     gradient: "linear-gradient(90.12deg, #6941DA 6.29%, #FFE768 47.27%)",
   },
   {
     title: "Deploy",
     description: "Deploy any smart contract with a single command.",
-    link: "https://portal.web3sdk.io/deploy",
+    link: "https://docs.web3sdk.io/deploy",
     img: require("/public/assets/landingpage/cli-deploy.png"),
     gradient: "linear-gradient(128deg, #410AB6 -9.03%, #5CFFE1 98.25%)",
   },

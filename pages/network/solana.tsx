@@ -120,7 +120,7 @@ const Solana: Web3sdkioNextPage = () => {
               />
               <LinkButton
                 variant="outline"
-                href="https://portal.web3sdk.io/solana"
+                href="https://docs.web3sdk.io/solana"
                 px={"64px"}
                 py={"28px"}
                 fontSize="20px"
@@ -170,7 +170,7 @@ const Solana: Web3sdkioNextPage = () => {
                 rightGradient: "#9945FF",
                 leftGradient: "#19FB9B",
               }}
-              href="https://portal.web3sdk.io/solana"
+              href="https://docs.web3sdk.io/solana"
             />
             <DashboardCard
               headingTitle="Launch"
@@ -183,7 +183,7 @@ const Solana: Web3sdkioNextPage = () => {
                 bottomGradient: "#9945FF",
                 topGradient: "#19FB9B",
               }}
-              href="https://portal.web3sdk.io/solana/creating-programs"
+              href="https://docs.web3sdk.io/solana/creating-programs"
             />
             <DashboardCard
               headingTitle="Manage"

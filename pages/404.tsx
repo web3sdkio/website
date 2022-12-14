@@ -75,7 +75,7 @@ const PageNotFound: Web3sdkioNextPage = () => {
             <TrackedLink
               category="page-not-found"
               label="portal"
-              href="https://portal.web3sdk.io"
+              href="https://docs.web3sdk.io"
               color="blue.500"
             >
               developer portal

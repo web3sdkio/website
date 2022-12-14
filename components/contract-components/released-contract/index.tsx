@@ -300,7 +300,7 @@ Deploy it in one click`,
                       <Icon as={FcCheckmark} boxSize={5} />
                       <Text size="label.md">
                         <TrackedLink
-                          href={`https://portal.web3sdk.io/contracts/${extension.docLinks.contracts}`}
+                          href={`https://docs.web3sdk.io/contracts/${extension.docLinks.contracts}`}
                           isExternal
                           category="extension"
                           label={extension.name}
@@ -344,7 +344,7 @@ Deploy it in one click`,
           <Flex flexDir="column" gap={4}>
             <Flex gap={2} alignItems="center">
               <LinkButton
-                href="https://portal.web3sdk.io/release"
+                href="https://docs.web3sdk.io/release"
                 w="full"
                 variant="outline"
                 isExternal

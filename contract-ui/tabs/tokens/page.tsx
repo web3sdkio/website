@@ -33,7 +33,7 @@ export const ContractTokensPage: React.FC<ContractTokenPageProps> = ({
         <Box>
           <LinkButton
             isExternal
-            href="https://portal.web3sdk.io/contractkit/interfaces/erc20"
+            href="https://docs.web3sdk.io/contractkit/interfaces/erc20"
             colorScheme="purple"
           >
             Learn more

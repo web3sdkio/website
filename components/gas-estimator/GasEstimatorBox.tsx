@@ -88,7 +88,7 @@ export const GasEstimatorBox: React.FC<GasEstimatorBoxProps> = ({
   return (
     <Box p={6} border="1px solid" borderColor="borderColor" {...props}>
       <Link
-        href={`https://portal.web3sdk.io/pre-built-contracts/${contractType}`}
+        href={`https://docs.web3sdk.io/pre-built-contracts/${contractType}`}
         onClick={() =>
           trackEvent({
             category: "gas-estimator",

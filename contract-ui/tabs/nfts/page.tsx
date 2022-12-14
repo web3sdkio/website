@@ -65,7 +65,7 @@ export const ContractNFTPage: React.FC<NftOverviewPageProps> = ({
           <Box>
             <LinkButton
               isExternal
-              href="https://portal.web3sdk.io/contractkit/interfaces/erc721supply"
+              href="https://docs.web3sdk.io/contractkit/interfaces/erc721supply"
               colorScheme="purple"
             >
               Learn more

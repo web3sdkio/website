@@ -26,7 +26,7 @@ const ContractsDeployPage: Web3sdkioNextPage = () => {
             <Link
               color="primary.500"
               isExternal
-              href="https://portal.web3sdk.io/deploy"
+              href="https://docs.web3sdk.io/deploy"
             >
               Learn more about deploying your contracts.
             </Link>

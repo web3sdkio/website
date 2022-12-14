@@ -307,7 +307,7 @@ const HomePage: Web3sdkioNextPage = () => {
                       <>
                         Implement core standards such as{" "}
                         <TrackedLink
-                          href="https://portal.web3sdk.io/contracts-sdk/base-contracts/erc-20/erc20base"
+                          href="https://docs.web3sdk.io/contracts-sdk/base-contracts/erc-20/erc20base"
                           category="landing-contracts"
                           label="base-erc20"
                           borderBottom="1px solid"
@@ -321,7 +321,7 @@ const HomePage: Web3sdkioNextPage = () => {
                         </TrackedLink>
                         ,{" "}
                         <TrackedLink
-                          href="https://portal.web3sdk.io/contracts-sdk/base-contracts/erc-721/erc721base"
+                          href="https://docs.web3sdk.io/contracts-sdk/base-contracts/erc-721/erc721base"
                           category="landing-contracts"
                           label="base-erc721"
                           borderBottom="1px solid"
@@ -335,7 +335,7 @@ const HomePage: Web3sdkioNextPage = () => {
                         </TrackedLink>{" "}
                         and{" "}
                         <TrackedLink
-                          href="https://portal.web3sdk.io/contracts-sdk/base-contracts/erc-1155/erc1155base"
+                          href="https://docs.web3sdk.io/contracts-sdk/base-contracts/erc-1155/erc1155base"
                           category="landing-contracts"
                           label="base-erc1155"
                           borderBottom="1px solid"
@@ -359,7 +359,7 @@ const HomePage: Web3sdkioNextPage = () => {
                       <>
                         Add features such as{" "}
                         <TrackedLink
-                          href="https://portal.web3sdk.io/contractkit/extension-contracts/permissions"
+                          href="https://docs.web3sdk.io/contractkit/extension-contracts/permissions"
                           category="landing-contracts"
                           label="extension-permissions"
                           borderBottom="1px solid"
@@ -372,7 +372,7 @@ const HomePage: Web3sdkioNextPage = () => {
                         </TrackedLink>
                         ,{" "}
                         <TrackedLink
-                          href="https://portal.web3sdk.io/contractkit/extension-contracts/royalty"
+                          href="https://docs.web3sdk.io/contractkit/extension-contracts/royalty"
                           category="landing-contracts"
                           label="extension-royalties"
                           borderBottom="1px solid"
@@ -385,7 +385,7 @@ const HomePage: Web3sdkioNextPage = () => {
                         </TrackedLink>
                         ,{" "}
                         <TrackedLink
-                          href="https://portal.web3sdk.io/contractkit/interfaces/erc721revealable"
+                          href="https://docs.web3sdk.io/contractkit/interfaces/erc721revealable"
                           category="landing-contracts"
                           label="extension-delayed-reveal"
                           borderBottom="1px solid"
@@ -409,7 +409,7 @@ const HomePage: Web3sdkioNextPage = () => {
                   />
                   <Divider borderColor="rgba(255,255,255,0.1)" />
                   <LinkButton
-                    href="https://portal.web3sdk.io/contractkit"
+                    href="https://docs.web3sdk.io/contractkit"
                     variant="solid"
                     colorScheme="whiteAlpha"
                     bg="white"

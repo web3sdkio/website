@@ -19,7 +19,7 @@ const Release: Web3sdkioNextPage = () => {
         title="The on-chain registry for smart contracts."
         description="Publish your contracts to the on-chain registry and enable everyone to easily deploy them in a single click."
         buttonText="Get started"
-        buttonLink="https://portal.web3sdk.io/release"
+        buttonLink="https://docs.web3sdk.io/release"
         image={require("public/assets/product-pages/release/hero.png")}
         gradient="linear-gradient(147.15deg, #410AB6 30.17%, #FBFF5C 100.01%)"
       >

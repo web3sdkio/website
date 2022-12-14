@@ -104,7 +104,7 @@ export const HomepageTopNav: React.FC = () => {
                 as={LinkButton}
                 isExternal
                 noIcon
-                href="https://discord.gg/web3sdkio"
+                href="https://discord.gg/n33UhsfUKB"
                 bg="transparent"
                 color="gray.50"
                 aria-label="discord"

@@ -90,7 +90,7 @@ const ContractDeployDetailPage: Web3sdkioNextPage = () => {
                       <Box>
                         <Heading size="subtitle.md">
                           <TrackedLink
-                            href="https://portal.web3sdk.io/contractkit"
+                            href="https://docs.web3sdk.io/contractkit"
                             category="extensions-deploy"
                             label="header"
                             isExternal
@@ -125,7 +125,7 @@ const ContractDeployDetailPage: Web3sdkioNextPage = () => {
             <LinkButton
               variant="outline"
               isExternal
-              href="https://portal.web3sdk.io/contractkit"
+              href="https://docs.web3sdk.io/contractkit"
             >
               Learn about web3sdkio extensions
             </LinkButton>
@@ -162,7 +162,7 @@ const EnabledFeature: React.FC<EnabledFeatureProps> = ({ feature }) => {
         <Flex gap={2} align="center">
           <Icon boxSize={4} color="green.500" as={FiCheckCircle} />
           <LinkOverlay
-            href={`https://portal.web3sdk.io/contracts/${feature.docLinks.contracts}`}
+            href={`https://docs.web3sdk.io/contracts/${feature.docLinks.contracts}`}
             isExternal
             onClick={() =>
               trackEvent({

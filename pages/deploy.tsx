@@ -19,7 +19,7 @@ const Deploy: Web3sdkioNextPage = () => {
         title="The next-gen contract deployment flow."
         description="Deploy any smart contract with a single command. Get all the tools you need to get to success."
         buttonText="Get started"
-        buttonLink="https://portal.web3sdk.io/deploy"
+        buttonLink="https://docs.web3sdk.io/deploy"
         image={require("public/assets/product-pages/deploy/hero.png")}
         gradient="linear-gradient(147.15deg, #410AB6 30.17%, #5CFFE1 100.01%)"
       >

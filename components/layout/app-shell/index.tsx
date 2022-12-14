@@ -88,7 +88,7 @@ export const AppShell: ComponentWithChildren<AppShellProps> = ({
               marginLeft="auto"
             >
               <TrackedLink
-                href="https://portal.web3sdk.io/"
+                href="https://docs.web3sdk.io/"
                 isExternal
                 variant="link"
                 color="inherit"
@@ -119,7 +119,7 @@ export const AppShell: ComponentWithChildren<AppShellProps> = ({
                   as={LinkButton}
                   isExternal
                   noIcon
-                  href="https://discord.gg/web3sdkio"
+                  href="https://discord.gg/n33UhsfUKB"
                   bg="transparent"
                   aria-label="discord"
                   icon={<Icon boxSize="1rem" as={SiDiscord} />}

@@ -109,7 +109,7 @@ export const ErrorProvider: ComponentWithChildren = ({ children }) => {
             colorScheme="discord"
             isExternal
             noIcon
-            href="https://discord.gg/web3sdkio"
+            href="https://discord.gg/n33UhsfUKB"
             leftIcon={<Icon boxSize="1rem" as={SiDiscord} />}
           >
             Join our Discord

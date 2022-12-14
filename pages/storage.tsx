@@ -18,7 +18,7 @@ const Storage: Web3sdkioNextPage = () => {
         title="Fast, reliable, decentralized storage"
         description="A blazing fast API for all your decentralized storage needs"
         buttonText="Get started"
-        buttonLink="https://portal.web3sdk.io/storage"
+        buttonLink="https://docs.web3sdk.io/storage"
         gradient="linear-gradient(147.15deg, #410AB6 30.17%, #FFAE63 100.01%)"
       >
         <SimpleGrid

@@ -40,7 +40,7 @@ export const MobileMenu: React.FC<IconButtonProps> = (props) => {
         <MenuGroup title={<>Resources</>} ml="12px">
           <MenuItem
             as={TrackedLink}
-            href="https://portal.web3sdk.io"
+            href="https://docs.web3sdk.io"
             category="topnav"
             label="docs"
             target="_blank"

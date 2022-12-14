@@ -26,7 +26,7 @@ export const ExamplesSection = () => {
         _hover={{
           bg: "whiteAlpha.800",
         }}
-        href="https://portal.web3sdk.io/templates"
+        href="https://docs.web3sdk.io/templates"
         isExternal
         noIcon
         p={6}

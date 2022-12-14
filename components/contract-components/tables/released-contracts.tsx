@@ -54,7 +54,7 @@ export const ReleasedContracts: React.FC<ReleasedContractsProps> = ({
           </Flex>
           <LinkButton
             colorScheme="primary"
-            href="https://portal.web3sdk.io/release"
+            href="https://docs.web3sdk.io/release"
             isExternal
             onClick={() => {
               trackEvent({

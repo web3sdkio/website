@@ -174,7 +174,7 @@ const SolanaHackathon: Web3sdkioNextPage = () => {
                 competing for. Please don&apos;t hesitate to reach out to our
                 team in our{" "}
                 <TrackedLink
-                  href="https://discord.gg/web3sdkio"
+                  href="https://discord.gg/n33UhsfUKB"
                   category="solanathon"
                   label="discord"
                   textDecoration="underline"

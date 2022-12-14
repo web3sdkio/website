@@ -66,7 +66,7 @@ export const CTA: React.FC<ICTA> = () => {
 
           <LinkButton
             isExternal
-            href="https://portal.web3sdk.io"
+            href="https://docs.web3sdk.io"
             bg="rgba(255, 255, 255, 0.1)"
             border="1px solid rgba(255, 255, 255, 0.2)"
             px="6"

@@ -49,7 +49,7 @@ const moduleExports = {
     return [
       {
         source: "/portal/:match*",
-        destination: "https://portal.web3sdk.io/:match*",
+        destination: "https://docs.web3sdk.io/:match*",
         permanent: true,
       },
       {
@@ -105,7 +105,7 @@ const moduleExports = {
   images: {
     dangerouslyAllowSVG: true,
     contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
-    domains: ["web3sdk.io", "portal.web3sdk.io", "blog.web3sdk.io"],
+    domains: ["web3sdk.io", "docs.web3sdk.io", "blog.web3sdk.io"],
   },
   reactStrictMode: true,
   experimental: {

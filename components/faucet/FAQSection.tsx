@@ -42,7 +42,7 @@ const FAQs = [
       <>
         Please try again in a few minutes. If the issue persists, please reach
         out to us on our{" "}
-        <Link href="https://discord.gg/web3sdkio" textDecor="underline">
+        <Link href="https://discord.gg/n33UhsfUKB" textDecor="underline">
           Discord{" "}
         </Link>
         or{" "}

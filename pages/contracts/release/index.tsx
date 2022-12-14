@@ -25,7 +25,7 @@ const ContractsReleasePage: Web3sdkioNextPage = () => {
           <Link
             color="primary.500"
             isExternal
-            href="https://portal.web3sdk.io/release"
+            href="https://docs.web3sdk.io/release"
           >
             Learn more about releasing your contracts.
           </Link>

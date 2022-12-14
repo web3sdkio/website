@@ -18,7 +18,7 @@ const UIComponents: Web3sdkioNextPage = () => {
         title="Plug-and-play frontend components"
         description="A collection of plug-and-play UI components that let you easily add web3 functionality to your apps."
         buttonText="Start building"
-        buttonLink="https://portal.web3sdk.io/sdk/ui-components"
+        buttonLink="https://docs.web3sdk.io/sdk/ui-components"
         image={require("public/assets/product-pages/ui-components/hero.png")}
         gradient="linear-gradient(147.15deg, #410AB6 16.94%, #40FFAF 86.73%)"
       >

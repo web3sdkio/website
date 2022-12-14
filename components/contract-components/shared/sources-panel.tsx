@@ -18,7 +18,7 @@ export const SourcesPanel: React.FC<SourcesPanelProps> = ({ sources, abi }) => {
           <Text>
             Contract source code not available. Try deploying with{" "}
             <Link
-              href="https://portal.web3sdk.io/deploy"
+              href="https://docs.web3sdk.io/deploy"
               isExternal
               color="blue.500"
             >

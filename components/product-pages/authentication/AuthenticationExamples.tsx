@@ -8,7 +8,7 @@ const EXAMPLES = [
   {
     title: "Login With Wallet",
     label: "login-with-wallet",
-    href: "https://portal.web3sdk.io/auth/quickstart",
+    href: "https://docs.web3sdk.io/auth/quickstart",
     image: require("/public/assets/product-pages/authentication/login-with-wallet.png"),
   },
   {
@@ -20,7 +20,7 @@ const EXAMPLES = [
   {
     title: "OAuth Integration",
     label: "oauth-integration",
-    href: "https://portal.web3sdk.io/auth/integrations/next-auth",
+    href: "https://docs.web3sdk.io/auth/integrations/next-auth",
     image: require("/public/assets/product-pages/authentication/link-accounts.png"),
   },
   {

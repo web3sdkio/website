@@ -7,7 +7,7 @@ const PLEASE_REACH_OUT_MESSAGE = (
     If you believe this is incorrect or the error persists, please reach out in{" "}
     <Link
       fontWeight="700"
-      href="https://discord.gg/web3sdkio"
+      href="https://discord.gg/n33UhsfUKB"
       isExternal
       textDecor="underline"
     >

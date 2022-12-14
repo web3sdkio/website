@@ -23,7 +23,7 @@ export const RESOURCES: IResource[] = [
     name: "Docs",
     label: "docs",
     description: "Complete web3sdkio documentation",
-    link: "https://portal.web3sdk.io",
+    link: "https://docs.web3sdk.io",
     icon: require("public/assets/tw-icons/pack.png"),
   },
   {

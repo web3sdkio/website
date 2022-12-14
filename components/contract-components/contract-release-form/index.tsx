@@ -604,7 +604,7 @@ export const ContractReleaseForm: React.FC<ContractReleaseFormProps> = ({
                   <Text>
                     Enter the addresses of your deployed factory contracts.
                     These need to conform to the{" "}
-                    <Link href="https://portal.web3sdk.io/contracts/IContractFactory">
+                    <Link href="https://docs.web3sdk.io/contracts/IContractFactory">
                       IContractFactory interface.
                     </Link>
                   </Text>
@@ -635,7 +635,7 @@ export const ContractReleaseForm: React.FC<ContractReleaseFormProps> = ({
               <LinkButton
                 size="sm"
                 variant="outline"
-                href="https://portal.web3sdk.io/release"
+                href="https://docs.web3sdk.io/release"
                 isExternal
               >
                 Learn more
