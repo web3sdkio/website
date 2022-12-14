@@ -130,7 +130,7 @@ export const AppShell: ComponentWithChildren<AppShellProps> = ({
                   as={LinkButton}
                   isExternal
                   noIcon
-                  href="https://www.youtube.com/channel/UCdzMx7Zhy5va5End1-XJFbA"
+                  href="https://www.youtube.com/channel/Bv-3RxU3vehd05NWsuSoLg"
                   bg="transparent"
                   aria-label="YouTube"
                   icon={<Icon boxSize="1rem" as={SiYoutube} />}

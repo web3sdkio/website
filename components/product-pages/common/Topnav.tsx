@@ -116,7 +116,7 @@ export const HomepageTopNav: React.FC = () => {
                 as={LinkButton}
                 isExternal
                 noIcon
-                href="https://www.youtube.com/channel/UCdzMx7Zhy5va5End1-XJFbA"
+                href="https://www.youtube.com/channel/Bv-3RxU3vehd05NWsuSoLg"
                 bg="transparent"
                 color="gray.50"
                 aria-label="YouTube"

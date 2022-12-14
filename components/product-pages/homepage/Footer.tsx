@@ -64,7 +64,7 @@ export const HomepageFooter: React.FC = () => {
                 as={LinkButton}
                 isExternal
                 noIcon
-                href="https://www.youtube.com/channel/UCdzMx7Zhy5va5End1-XJFbA"
+                href="https://www.youtube.com/channel/Bv-3RxU3vehd05NWsuSoLg"
                 aria-label="YouTube"
                 icon={<SiYoutube fontSize="1.25rem" />}
                 category="footer"
