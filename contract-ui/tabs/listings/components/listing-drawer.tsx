@@ -1,6 +1,8 @@
 import { CancelTab } from "./cancel-tab";
 import {
   Flex,
+  GridItem,
+  SimpleGrid,
   Tab,
   TabList,
   TabPanel,
@@ -16,14 +18,9 @@ import type {
 } from "@web3sdkio/sdk/evm";
 import { BigNumber } from "ethers";
 import { useMemo } from "react";
-import {
-  Card,
-  CodeBlock,
-  Drawer,
-  Heading,
-  NFTMedia,
-  Text,
-} from "tw-components";
+import { Badge, Card, CodeBlock, Drawer, Heading, Text } from "tw-components";
+import { AddressCopyButton } from "tw-components/AddressCopyButton";
+import { NFTMedia } from "tw-components/nft-media";
 
 interface NFTDrawerProps {
   contract: Marketplace;
@@ -56,13 +53,43 @@ export const ListingDrawer: React.FC<NFTDrawerProps> = ({
         children: () => (
           <Flex flexDir="column" gap={4}>
             <Card as={Flex} flexDir="column" gap={3}>
-              <Text size="label.md">Token ID: {tokenId}</Text>
-              <Text size="label.md">Owner: {renderData.sellerAddress}</Text>
-              <Text size="label.md">Token Standard: {renderData.type}</Text>
-              <Text size="label.md">
-                Quantity:{" "}
-                {BigNumber.from(renderData.quantity || "0").toString()}
-              </Text>
+              <SimpleGrid rowGap={3} columns={12} placeItems="center left">
+                <GridItem colSpan={3}>
+                  <Heading size="label.md">Token ID</Heading>
+                </GridItem>
+                <GridItem colSpan={9}>
+                  <AddressCopyButton size="xs" address={tokenId} tokenId />
+                </GridItem>
+                <GridItem colSpan={3}>
+                  <Heading size="label.md">Seller</Heading>
+                </GridItem>
+                <GridItem colSpan={9}>
+                  <AddressCopyButton
+                    size="xs"
+                    address={renderData.sellerAddress}
+                  />
+                </GridItem>
+                <GridItem colSpan={3}>
+                  <Heading size="label.md">Listing Type</Heading>
+                </GridItem>
+                <GridItem colSpan={9}>
+                  <Badge
+                    size="label.sm"
+                    variant="subtle"
+                    textTransform="capitalize"
+                  >
+                    {renderData?.type === 0 ? "Direct Listing" : "Auction"}
+                  </Badge>
+                </GridItem>
+                <GridItem colSpan={3}>
+                  <Heading size="label.md">Quantity</Heading>
+                </GridItem>
+                <GridItem colSpan={9}>
+                  <Text fontFamily="mono" size="body.md">
+                    {BigNumber.from(renderData.quantity || "0").toString()}
+                  </Text>
+                </GridItem>
+              </SimpleGrid>
             </Card>
             {data?.asset.attributes || data?.asset.properties ? (
               <Card as={Flex} flexDir="column" gap={4}>
@@ -116,6 +143,7 @@ export const ListingDrawer: React.FC<NFTDrawerProps> = ({
       <Flex py={6} px={2} flexDir="column" gap={6}>
         <Flex gap={6}>
           <NFTMedia
+            borderRadius="lg"
             metadata={renderData.asset}
             requireInteraction
             flexShrink={0}

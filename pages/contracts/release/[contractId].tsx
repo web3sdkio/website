@@ -3,10 +3,10 @@ import { AppLayout } from "components/app-layouts/app";
 import { ContractReleaseForm } from "components/contract-components/contract-release-form";
 import { PublisherSDKContext } from "contexts/custom-sdk-context";
 import { useSingleQueryParam } from "hooks/useQueryParam";
+// import dynamic from "next/dynamic";
 import { PageId } from "page-id";
-import { Web3sdkioNextPage } from "pages/_app";
-import { ReactElement } from "react";
 import { Heading, Text } from "tw-components";
+import { Web3sdkioNextPage } from "utils/types";
 
 const ContractsPublishPage: Web3sdkioNextPage = () => {
   const contractId = useSingleQueryParam("contractId");
@@ -22,7 +22,7 @@ const ContractsPublishPage: Web3sdkioNextPage = () => {
             <br /> Unlocks automatic SDKs in all languages, admin dashboards,
             analytics and auto verification.{" "}
             <Link
-              color="primary.500"
+              color="blue.500"
               isExternal
               href="https://docs.web3sdk.io/release"
             >
@@ -36,8 +36,12 @@ const ContractsPublishPage: Web3sdkioNextPage = () => {
   );
 };
 
-ContractsPublishPage.getLayout = (page: ReactElement) => (
-  <AppLayout>
+// const AppLayout = dynamic(
+//   async () => (await import("components/app-layouts/app")).AppLayout,
+// );
+
+ContractsPublishPage.getLayout = (page, props) => (
+  <AppLayout {...props}>
     <PublisherSDKContext>{page}</PublisherSDKContext>
   </AppLayout>
 );

@@ -1,4 +1,4 @@
-import { ConnectWallet } from "@3rdweb-sdk/react";
+import { ConnectWallet } from "@3rdweb-sdk/react/components/connect-wallet";
 import {
   Box,
   ButtonGroup,
@@ -6,19 +6,29 @@ import {
   Divider,
   Flex,
   Icon,
+  Popover,
+  PopoverArrow,
+  PopoverBody,
+  PopoverContent,
+  PopoverTrigger,
   Stack,
 } from "@chakra-ui/react";
 import { SiDiscord } from "@react-icons/all-files/si/SiDiscord";
 import { SiGithub } from "@react-icons/all-files/si/SiGithub";
 import { SiTwitter } from "@react-icons/all-files/si/SiTwitter";
 import { SiYoutube } from "@react-icons/all-files/si/SiYoutube";
+import { useWallet } from "@solana/wallet-adapter-react";
+import { useAddress } from "@web3sdkio/react";
 import { ColorModeToggle } from "components/color-mode/color-mode-toggle";
 import { Logo } from "components/logo";
 import { InsufficientFunds } from "components/notices/InsufficientFunds";
 import { NextSeo } from "next-seo";
 import { useRouter } from "next/router";
-import { RiGasStationFill } from "react-icons/ri";
+import { FiFile, FiGlobe, FiHelpCircle, FiUsers } from "react-icons/fi";
 import {
+  Button,
+  Card,
+  Heading,
   Link,
   LinkButton,
   Text,
@@ -30,14 +40,18 @@ import { ComponentWithChildren } from "types/component-with-children";
 export interface AppShellProps {
   layout?: "custom-contract";
   ecosystem?: "evm" | "solana" | "either";
+  noSEOOverride?: boolean;
 }
 
 export const AppShell: ComponentWithChildren<AppShellProps> = ({
   children,
   layout,
   ecosystem = "either",
+  noSEOOverride,
 }) => {
   const { pathname } = useRouter();
+  const address = useAddress();
+  const publicKey = useWallet().publicKey?.toBase58();
 
   const isCustomContractLayout = layout === "custom-contract";
   return (
@@ -47,13 +61,15 @@ export const AppShell: ComponentWithChildren<AppShellProps> = ({
       overflow="hidden"
       backgroundColor="backgroundBody"
     >
-      <NextSeo
-        title="Dashboard"
-        openGraph={{
-          title: "Dashboard | web3sdkio",
-          url: `https://web3sdk.io/dashboard`,
-        }}
-      />
+      {!noSEOOverride && (
+        <NextSeo
+          title="Dashboard"
+          openGraph={{
+            title: "Dashboard | web3sdkio",
+            url: `https://web3sdk.io/dashboard`,
+          }}
+        />
+      )}
       <Flex
         transition="margin 350ms ease"
         zIndex="docked"
@@ -70,6 +86,8 @@ export const AppShell: ComponentWithChildren<AppShellProps> = ({
           shadow={isCustomContractLayout ? undefined : "sm"}
           position={isCustomContractLayout ? undefined : "sticky"}
           top={isCustomContractLayout ? undefined : 0}
+          borderColor="borderColor"
+          borderBottomWidth={isCustomContractLayout ? 0 : 1}
         >
           <Container
             maxW="container.page"
@@ -78,91 +96,174 @@ export const AppShell: ComponentWithChildren<AppShellProps> = ({
             as="header"
             alignItems="center"
           >
-            <Link href="/dashboard">
+            <Link href={address || publicKey ? "/dashboard" : "/explore"}>
               <Logo />
             </Link>
-            <Stack
-              direction="row"
-              align="center"
-              spacing={{ base: 3, md: 4 }}
-              marginLeft="auto"
-            >
-              <TrackedLink
-                href="https://docs.web3sdk.io/"
-                isExternal
+            <Flex align="center" gap={2} marginLeft="auto">
+              <Button
+                as={TrackedLink}
                 variant="link"
-                color="inherit"
-                fontWeight="inherit"
-                textDecoration={undefined}
-                display={{ base: "none", md: "block" }}
+                href="/explore"
                 category="header"
                 label="docs"
+                flexDir="row"
+                gap={1.5}
+                mx={1}
+                alignItems="center"
+                display={{ base: "none", md: "flex" }}
               >
-                Docs
-              </TrackedLink>
-              <ButtonGroup
-                variant="ghost"
-                display={{ base: "none", md: "block" }}
+                <Icon as={FiGlobe} />
+                <Heading
+                  display={{ base: "none", md: "inline-flex" }}
+                  as="h4"
+                  size="label.md"
+                >
+                  Explore
+                </Heading>
+              </Button>
+              <Button
+                as={TrackedLink}
+                variant="link"
+                href="https://docs.web3sdk.io"
+                isExternal
+                category="header"
+                label="docs"
+                flexDir="row"
+                gap={1.5}
+                mx={1}
+                alignItems="center"
+                display={{ base: "none", md: "flex" }}
               >
-                <TrackedIconButton
-                  as={LinkButton}
-                  isExternal
-                  noIcon
-                  href="https://twitter.com/web3sdkio"
-                  bg="transparent"
-                  aria-label="twitter"
-                  icon={<Icon boxSize="1rem" as={SiTwitter} />}
-                  category="header"
-                  label="twitter"
-                />
-                <TrackedIconButton
-                  as={LinkButton}
-                  isExternal
-                  noIcon
-                  href="https://discord.gg/n33UhsfUKB"
-                  bg="transparent"
-                  aria-label="discord"
-                  icon={<Icon boxSize="1rem" as={SiDiscord} />}
-                  category="header"
-                  label="discord"
-                />
-                <TrackedIconButton
-                  as={LinkButton}
-                  isExternal
-                  noIcon
-                  href="https://www.youtube.com/channel/Bv-3RxU3vehd05NWsuSoLg"
-                  bg="transparent"
-                  aria-label="YouTube"
-                  icon={<Icon boxSize="1rem" as={SiYoutube} />}
-                  category="header"
-                  label="youtube"
-                />
-                <TrackedIconButton
-                  as={LinkButton}
-                  isExternal
-                  noIcon
-                  href="https://github.com/web3sdkio"
-                  bg="transparent"
-                  aria-label="github"
-                  icon={<Icon boxSize="1rem" as={SiGithub} />}
-                  category="header"
-                  label="github"
-                />
+                <Icon as={FiFile} />
+                <Heading
+                  as="h4"
+                  size="label.md"
+                  display={{ base: "none", md: "inline-flex" }}
+                >
+                  Docs
+                </Heading>
+              </Button>
+              <Button
+                as={TrackedLink}
+                variant="link"
+                href="https://support.web3sdk.io"
+                isExternal
+                category="header"
+                label="support"
+                flexDir="row"
+                gap={1.5}
+                mx={1}
+                alignItems="center"
+                display="flex"
+              >
+                <Icon as={FiHelpCircle} />
+                <Heading
+                  as="h4"
+                  size="label.md"
+                  display={{ base: "none", md: "inline-flex" }}
+                >
+                  Support
+                </Heading>
+              </Button>
 
-                <TrackedIconButton
-                  as={LinkButton}
-                  noIcon
-                  href="/gas"
-                  bg="transparent"
-                  aria-label="gas-estimator"
-                  icon={<Icon boxSize="1rem" as={RiGasStationFill} />}
-                  category="header"
-                  label="gas-estimator"
-                />
-              </ButtonGroup>
+              <Popover>
+                <PopoverTrigger>
+                  <Button
+                    display={{ base: "none", md: "flex" }}
+                    variant="link"
+                    flexDir="row"
+                    gap={1.5}
+                    mx={1}
+                    alignItems="center"
+                  >
+                    <Icon as={FiUsers} />
+                    <Heading
+                      as="h4"
+                      size="label.md"
+                      display={{ base: "none", md: "inline-flex" }}
+                    >
+                      Community
+                    </Heading>
+                  </Button>
+                </PopoverTrigger>
+                <Card
+                  p={0}
+                  maxW="sm"
+                  w="auto"
+                  as={PopoverContent}
+                  bg="backgroundCardHighlight"
+                  boxShadow="0px 0px 2px 0px var(--popper-arrow-shadow-color)"
+                >
+                  <PopoverArrow bg="backgroundCardHighlight" />
+                  <PopoverBody>
+                    <ButtonGroup variant="ghost">
+                      <TrackedIconButton
+                        as={LinkButton}
+                        isExternal
+                        noIcon
+                        href="https://twitter.com/web3sdkio"
+                        // bg="transparent"
+                        aria-label="twitter"
+                        _hover={{
+                          bg: "accent.200",
+                        }}
+                        icon={<Icon as={SiTwitter} />}
+                        category="header"
+                        label="twitter"
+                      />
+                      <TrackedIconButton
+                        as={LinkButton}
+                        isExternal
+                        noIcon
+                        href="https://discord.gg/n33UhsfUKB"
+                        // bg="transparent"
+                        _hover={{
+                          bg: "accent.200",
+                        }}
+                        aria-label="discord"
+                        icon={<Icon as={SiDiscord} />}
+                        category="header"
+                        label="discord"
+                      />
+                      <TrackedIconButton
+                        as={LinkButton}
+                        isExternal
+                        noIcon
+                        href="https://www.youtube.com/channel/Bv-3RxU3vehd05NWsuSoLg"
+                        // bg="transparent"
+                        _hover={{
+                          bg: "accent.200",
+                        }}
+                        aria-label="YouTube"
+                        icon={<Icon as={SiYoutube} />}
+                        category="header"
+                        label="youtube"
+                      />
+                      <TrackedIconButton
+                        as={LinkButton}
+                        isExternal
+                        noIcon
+                        href="https://github.com/web3sdkio"
+                        // bg="transparent"
+                        _hover={{
+                          bg: "accent.200",
+                        }}
+                        aria-label="github"
+                        icon={<Icon as={SiGithub} />}
+                        category="header"
+                        label="github"
+                      />
+                    </ButtonGroup>
+                  </PopoverBody>
+                </Card>
+              </Popover>
               <ColorModeToggle />
-              <ConnectWallet colorScheme="primary" ecosystem={ecosystem} />
-            </Stack>
+              <ConnectWallet
+                ml={{ base: 0, md: 2 }}
+                colorScheme="blue"
+                ecosystem={ecosystem}
+              />
+            </Flex>
           </Container>
         </Box>
         {isCustomContractLayout ? (
@@ -184,40 +285,52 @@ export const AppShell: ComponentWithChildren<AppShellProps> = ({
         >
           <Stack>
             <Divider mb={4} />
-            <Flex
-              direction={{ base: "column", md: "row" }}
-              gap={4}
-              align="center"
-              justify="center"
-            >
-              <Text alignSelf="center" order={{ base: 2, md: 0 }}>
-                web3sdkio &copy; {new Date().getFullYear()}
-              </Text>
-              <Flex align="center" justify="center" gap={4}>
-                <TrackedLink
-                  isExternal
-                  href="https://feedback.web3sdk.io"
-                  category="footer"
-                  label="feedback"
-                >
-                  Feedback
-                </TrackedLink>
-                <TrackedLink
-                  isExternal
-                  href="/privacy"
-                  category="footer"
-                  label="privacy"
-                >
-                  Privacy Policy
-                </TrackedLink>
-                <TrackedLink
-                  isExternal
-                  href="/tos"
-                  category="footer"
-                  label="terms"
-                >
-                  Terms of Service
-                </TrackedLink>
+            <Flex direction="column" gap={4}>
+              <Flex
+                direction={{ base: "column", md: "row" }}
+                gap={4}
+                align="center"
+                justify="center"
+              >
+                <Text alignSelf="center" order={{ base: 2, md: 0 }}>
+                  web3sdkio &copy; {new Date().getFullYear()}
+                </Text>
+                <Flex align="center" justify="center" gap={4}>
+                  <TrackedLink
+                    isExternal
+                    href="https://feedback.web3sdk.io"
+                    category="footer"
+                    label="feedback"
+                  >
+                    Feedback
+                  </TrackedLink>
+                  <TrackedLink
+                    isExternal
+                    href="/privacy"
+                    category="footer"
+                    label="privacy"
+                  >
+                    Privacy Policy
+                  </TrackedLink>
+                  <TrackedLink
+                    isExternal
+                    href="/tos"
+                    category="footer"
+                    label="terms"
+                  >
+                    Terms of Service
+                  </TrackedLink>
+
+                  <TrackedLink
+                    href="/gas"
+                    bg="transparent"
+                    category="footer"
+                    display={{ base: "none", md: "flex" }}
+                    label="gas-estimator"
+                  >
+                    Gas Estimator
+                  </TrackedLink>
+                </Flex>
               </Flex>
             </Flex>
           </Stack>

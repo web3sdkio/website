@@ -13,16 +13,9 @@ import {
 import { PublicKey } from "@solana/web3.js";
 import type { NFT } from "@web3sdkio/sdk";
 import React from "react";
-import {
-  AddressCopyButton,
-  Badge,
-  Card,
-  CodeBlock,
-  Drawer,
-  Heading,
-  NFTMedia,
-  Text,
-} from "tw-components";
+import { Badge, Card, CodeBlock, Drawer, Heading, Text } from "tw-components";
+import { AddressCopyButton } from "tw-components/AddressCopyButton";
+import { NFTMediaWithEmptyState } from "tw-components/nft-media";
 
 interface NFTDrawerProps {
   isOpen: boolean;
@@ -60,11 +53,12 @@ export const NFTDrawer: React.FC<NFTDrawerProps> = ({
     >
       <Flex py={6} px={2} flexDir="column" gap={6}>
         <Flex gap={6}>
-          <NFTMedia
+          <NFTMediaWithEmptyState
             metadata={renderData.metadata}
             requireInteraction
             flexShrink={0}
             boxSize={32}
+            borderRadius="lg"
             objectFit="contain"
           />
           <Flex flexDir="column" gap={2} w="70%">
@@ -104,12 +98,19 @@ export const NFTDrawer: React.FC<NFTDrawerProps> = ({
                     <GridItem colSpan={3}>
                       <Heading size="label.md">Owner</Heading>
                     </GridItem>
-                    <GridItem colSpan={9}>
-                      <AddressCopyButton size="xs" address={renderData.owner} />
-                    </GridItem>
-                    <GridItem colSpan={3}>
-                      <Heading size="label.md">Token Standard</Heading>
-                    </GridItem>
+                    {renderData.type === "ERC721" && (
+                      <>
+                        <GridItem colSpan={9}>
+                          <AddressCopyButton
+                            size="xs"
+                            address={renderData.owner}
+                          />
+                        </GridItem>
+                        <GridItem colSpan={3}>
+                          <Heading size="label.md">Token Standard</Heading>
+                        </GridItem>
+                      </>
+                    )}
                     <GridItem colSpan={9}>
                       <Badge size="label.sm" variant="subtle">
                         {renderData.type}

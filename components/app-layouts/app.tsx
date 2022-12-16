@@ -1,25 +1,125 @@
 import { DashboardWeb3sdkioProvider } from "./providers";
 import { useWallet } from "@solana/wallet-adapter-react";
-import { useAddress, useBalance, useChainId } from "@web3sdkio/react";
+import { createAsyncStoragePersister } from "@tanstack/query-async-storage-persister";
+import { DehydratedState, Hydrate, QueryClient } from "@tanstack/react-query";
+import {
+  PersistQueryClientProvider,
+  Persister,
+} from "@tanstack/react-query-persist-client";
+import {
+  shouldNeverPersistQuery,
+  useAddress,
+  useBalance,
+  useChainId,
+} from "@web3sdkio/react";
 import { useSDK } from "@web3sdkio/react/solana";
 import { AppShell, AppShellProps } from "components/layout/app-shell";
 import { PrivacyNotice } from "components/notices/PrivacyNotice";
-import { WelcomeScreen } from "components/notices/welcome-screen";
 import { ErrorProvider } from "contexts/error-handler";
+import { del, get, set } from "idb-keyval";
+import { useRouter } from "next/router";
 import posthog from "posthog-js";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { ComponentWithChildren } from "types/component-with-children";
+import { bigNumberReplacer } from "utils/bignumber";
+import { isBrowser } from "utils/isBrowser";
 
-export const AppLayout: ComponentWithChildren<AppShellProps> = (props) => {
+const __CACHE_BUSTER = "v3.5.3";
+
+interface AsyncStorage {
+  getItem: (key: string) => Promise<string | null>;
+  setItem: (key: string, value: string) => Promise<void>;
+  removeItem: (key: string) => Promise<void>;
+}
+
+let currStorage: AsyncStorage | undefined;
+
+function getStorage() {
+  if (!isBrowser()) {
+    return undefined;
+  }
+  if (currStorage) {
+    return currStorage;
+  }
+
+  currStorage = {
+    getItem: async (key) => {
+      const i = await get(key);
+      if (!i) {
+        return null;
+      }
+      return i as string | null;
+    },
+    setItem: set,
+    removeItem: del,
+    // eslint-disable-next-line prettier/prettier
+  } as AsyncStorage;
+  return currStorage;
+}
+
+const persister: Persister = createAsyncStoragePersister({
+  storage: getStorage(),
+  serialize: (data) => {
+    return JSON.stringify(
+      {
+        ...data,
+        clientState: {
+          ...data.clientState,
+          queries: data.clientState.queries.filter(
+            // covers solana as well as evm
+            (q) => !shouldNeverPersistQuery(q.queryKey),
+          ),
+        },
+      },
+      bigNumberReplacer,
+    );
+  },
+  key: `tw-query-cache`,
+});
+
+export interface AppLayoutProps extends AppShellProps {
+  dehydratedState?: DehydratedState;
+}
+
+export const AppLayout: ComponentWithChildren<AppLayoutProps> = (props) => {
+  // has to be constructed in here because it may otherwise share state between SSR'd pages
+  const [queryClient] = useState(
+    () =>
+      new QueryClient({
+        defaultOptions: {
+          queries: {
+            // 24 hours
+            cacheTime: 1000 * 60 * 60 * 24,
+            // 30 seconds
+            staleTime: 1000 * 30,
+          },
+        },
+      }),
+  );
+
+  const router = useRouter();
   return (
-    <ErrorProvider>
-      <DashboardWeb3sdkioProvider>
-        <PHIdentifier />
-        <PrivacyNotice />
-        <WelcomeScreen />
-        <AppShell {...props} />
-      </DashboardWeb3sdkioProvider>
-    </ErrorProvider>
+    <PersistQueryClientProvider
+      client={queryClient}
+      persistOptions={{
+        persister,
+        buster: __CACHE_BUSTER,
+        dehydrateOptions: {
+          shouldDehydrateQuery: (q) => !shouldNeverPersistQuery(q.queryKey),
+        },
+      }}
+    >
+      <Hydrate state={props.dehydratedState}>
+        <ErrorProvider>
+          <DashboardWeb3sdkioProvider>
+            <PHIdentifier />
+            {router.pathname !== "/dashboard" && <PrivacyNotice />}
+
+            <AppShell {...props} />
+          </DashboardWeb3sdkioProvider>
+        </ErrorProvider>
+      </Hydrate>
+    </PersistQueryClientProvider>
   );
 };
 

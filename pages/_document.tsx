@@ -7,25 +7,13 @@ class ConsoleDocument extends Document {
     return (
       <Html lang="en-US">
         <Head>
-          <link rel="preconnect" href="https://fonts.googleapis.com" />
-          <link
-            rel="preconnect"
-            href="https://fonts.gstatic.com"
-            crossOrigin="anonymous"
-          />
-          <link
-            href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&display=swap"
-            rel="stylesheet"
-          ></link>
-          <link
-            href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;402;500;600;700;800;900&display=swap"
-            rel="stylesheet"
-          ></link>
-          <link
-            rel="stylesheet"
-            href="https://unpkg.com/react-vis/dist/style.css"
-          ></link>
-          <script>global = globalThis;</script>
+          {/* preconnect to domains we know we'll be using */}
+          <link rel="preconnect" href="https://a.web3sdk.io" />
+          <link rel="dns-prefetch" href="https://a.web3sdk.io" />
+          <link rel="preconnect" href="https://pl.web3sdk.io" />
+          <link rel="dns-prefetch" href="https://pl.web3sdk.io" />
+          {/* prefetch domains we are likely to use */}
+          <link rel="dns-prefetch" href="https://gateway.ipfscdn.io" />
         </Head>
         <body id="tw-body-root">
           <ColorModeScript

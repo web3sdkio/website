@@ -1,10 +1,10 @@
-import { Web3sdkioNextPage } from "./_app";
 import { Box, Center, DarkMode, Flex } from "@chakra-ui/react";
 import { ChakraNextImage } from "components/Image";
 import { HomepageSection } from "components/product-pages/homepage/HomepageSection";
 import { PageId } from "page-id";
 import NotFound from "public/assets/landingpage/not-found.png";
 import { Heading, Text, TrackedLink } from "tw-components";
+import { Web3sdkioNextPage } from "utils/types";
 
 const PageNotFound: Web3sdkioNextPage = () => {
   return (
@@ -49,7 +49,10 @@ const PageNotFound: Web3sdkioNextPage = () => {
             </Center>
           </Center>
           <Heading textAlign="center" size="display.md">
-            Uh oh. Looks like web3 <br />
+            Uh oh.
+            <br />
+            Looks like web3
+            <br />
             can&apos;t be found here.
           </Heading>
           <Text size="body.2xl" textAlign="center" mt={3}>

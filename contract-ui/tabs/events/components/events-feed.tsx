@@ -23,12 +23,11 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import { AiOutlineQuestionCircle } from "@react-icons/all-files/ai/AiOutlineQuestionCircle";
-import { ContractEvent } from "@web3sdkio/sdk/evm";
+import type { ContractEvent } from "@web3sdkio/sdk/evm";
 import { AnimatePresence, motion } from "framer-motion";
 import { useSingleQueryParam } from "hooks/useQueryParam";
 import { useRouter } from "next/router";
-import { bigNumberReplacer } from "pages/_app";
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { FiChevronDown, FiCopy } from "react-icons/fi";
 import {
   Button,
@@ -38,6 +37,7 @@ import {
   Heading,
   Text,
 } from "tw-components";
+import { bigNumberReplacer } from "utils/bignumber";
 
 interface ContractTransaction {
   transactionHash: ContractEvent["transaction"]["transactionHash"];
@@ -189,7 +189,13 @@ export const EventsFeedItem: React.FC<EventsFeedItemProps> = ({
   contractAddress,
 }) => {
   const toast = useToast();
-  const { onCopy } = useClipboard(transaction.transactionHash);
+  const { onCopy, setValue } = useClipboard(transaction.transactionHash);
+
+  useEffect(() => {
+    if (transaction.transactionHash) {
+      setValue(transaction.transactionHash);
+    }
+  }, [transaction.transactionHash, setValue]);
 
   const router = useRouter();
   const chainName = useSingleQueryParam("networkOrAddress");

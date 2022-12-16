@@ -2,15 +2,20 @@ import {
   Web3sdkioSDK as EVMWeb3sdkioSDK,
   SUPPORTED_CHAIN_ID,
   ChainId,
-} from "@thirdweb-dev/sdk/evm";
+} from "@web3sdkio/sdk/evm";
 import { Web3sdkioSDK as SOLWeb3sdkioSDK } from "@web3sdkio/sdk/solana";
 import { IpfsUploader, Web3sdkioStorage } from "@web3sdkio/storage";
 import { getEVMRPC, getSOLRPC } from "constants/rpc";
 import { DashboardSolanaNetwork } from "utils/network";
 
+// use env var to set IPFS gateway or fallback to ipfscdn.io
+const IPFS_GATEWAY_URL =
+  (process.env.NEXT_PUBLIC_IPFS_GATEWAY_URL as string) ||
+  "https://gateway.ipfscdn.io/ipfs";
+
 export const StorageSingleton = new Web3sdkioStorage({
   gatewayUrls: {
-    "ipfs://": [process.env.NEXT_PUBLIC_IPFS_GATEWAY_URL as string],
+    "ipfs://": [IPFS_GATEWAY_URL],
   },
 });
 

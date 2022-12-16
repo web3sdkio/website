@@ -28,6 +28,7 @@ import type {
 } from "@web3sdkio/sdk/solana";
 import { ChakraNextImage } from "components/Image";
 import { TransactionButton } from "components/buttons/TransactionButton";
+import { replaceDeployerAddress } from "components/explore/publisher";
 import { FancyEVMIcon } from "components/icons/Ethereum";
 import {
   BuiltinContractDetails,
@@ -45,7 +46,6 @@ import { FiArrowRight } from "react-icons/fi";
 import { Column, Row, useTable } from "react-table";
 import invariant from "tiny-invariant";
 import {
-  AddressCopyButton,
   Card,
   Drawer,
   Heading,
@@ -54,6 +54,7 @@ import {
   TrackedIconButton,
   TrackedLink,
 } from "tw-components";
+import { AddressCopyButton } from "tw-components/AddressCopyButton";
 import { ComponentWithChildren } from "types/component-with-children";
 import {
   DashboardSolanaNetwork,
@@ -245,7 +246,7 @@ export const ReleasedContractTable: ComponentWithChildren<
         />
       )}
       <Table {...tableInstance.getTableProps()}>
-        <Thead bg="blackAlpha.50" _dark={{ bg: "whiteAlpha.50" }}>
+        <Thead>
           {tableInstance.headerGroups.map((headerGroup) => (
             <Tr
               {...headerGroup.getHeaderGroupProps()}
@@ -309,7 +310,9 @@ const ContractTableRow: React.FC<ContractTableRowProps> = ({ row }) => {
         onClick={() => {
           if (row.original.ecosystem === "evm") {
             router.push(
-              `/${row.original.publisher}/${row.original.id}`,
+              replaceDeployerAddress(
+                `/${row.original.publisher}/${row.original.id}`,
+              ),
               undefined,
               {
                 scroll: true,
@@ -483,7 +486,7 @@ const WrappedSolanaDeployDrawer: React.FC<
                 form={formId}
                 ecosystem="solana"
                 isLoading={deployMutation.isLoading}
-                colorScheme="primary"
+                colorScheme="blue"
                 transactionCount={1}
               >
                 Deploy Now

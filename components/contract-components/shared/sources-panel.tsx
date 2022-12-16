@@ -1,6 +1,7 @@
-import { Abi, SourceFile } from "../types";
+import { SourceFile } from "../types";
 import { SourcesAccordion } from "./sources-accordion";
 import { Flex } from "@chakra-ui/react";
+import { Abi } from "@web3sdkio/sdk";
 import { Link, Text } from "tw-components";
 
 interface SourcesPanelProps {
@@ -20,7 +21,7 @@ export const SourcesPanel: React.FC<SourcesPanelProps> = ({ sources, abi }) => {
             <Link
               href="https://docs.web3sdk.io/deploy"
               isExternal
-              color="blue.500"
+              color="primary.500"
             >
               web3sdkio CLI v0.5+
             </Link>

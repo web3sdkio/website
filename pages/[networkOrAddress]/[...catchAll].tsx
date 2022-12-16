@@ -1,28 +1,28 @@
-import { QueryClient, dehydrate } from "@tanstack/react-query";
+import { DehydratedState, QueryClient, dehydrate } from "@tanstack/react-query";
 import { ChainId, SUPPORTED_CHAIN_ID } from "@web3sdkio/sdk/evm";
 import { AppLayout } from "components/app-layouts/app";
 import {
-  ens,
+  ensQuery,
   fetchAllVersions,
   fetchContractPublishMetadataFromURI,
   fetchReleasedContractInfo,
-  fetchReleaserProfile,
+  releaserProfileQuery,
 } from "components/contract-components/hooks";
 import {
   ReleaseWithVersionPage,
   ReleaseWithVersionPageProps,
 } from "components/pages/release";
-import { BuiltinContractMap } from "constants/mappings";
 import { PublisherSDKContext } from "contexts/custom-sdk-context";
 import { ContractTabRouter } from "contract-ui/layout/tab-router";
+import { getAllExploreReleases } from "data/explore";
 import {
   isPossibleEVMAddress,
   isPossibleSolanaAddress,
 } from "lib/address-utils";
 import { getEVMWeb3sdkioSDK } from "lib/sdk";
 import { GetStaticPaths, GetStaticProps, InferGetStaticPropsType } from "next";
+// import dynamic from "next/dynamic";
 import { PageId } from "page-id";
-import { Web3sdkioNextPage } from "pages/_app";
 import { ReactElement } from "react";
 import {
   DashboardSolanaNetwork,
@@ -33,6 +33,7 @@ import {
   isSupportedSOLNetwork,
 } from "utils/network";
 import { getSingleQueryValue } from "utils/router";
+import { Web3sdkioNextPage } from "utils/types";
 
 const CatchAllPage: Web3sdkioNextPage = (
   props: InferGetStaticPropsType<typeof getStaticProps>,
@@ -69,6 +70,10 @@ const CatchAllPage: Web3sdkioNextPage = (
   return null;
 };
 
+// const AppLayout = dynamic(
+//   async () => (await import("components/app-layouts/app")).AppLayout,
+// );
+
 CatchAllPage.getLayout = function (
   page: ReactElement,
   props: InferGetStaticPropsType<typeof getStaticProps>,
@@ -76,6 +81,7 @@ CatchAllPage.getLayout = function (
   return (
     <AppLayout
       layout={props.pageType !== "release" ? "custom-contract" : undefined}
+      dehydratedState={props.dehydratedState}
     >
       {page}
     </AppLayout>
@@ -101,17 +107,22 @@ CatchAllPage.pageId = (
 export default CatchAllPage;
 
 type PossiblePageProps =
-  | ({ pageType: "release" } & ReleaseWithVersionPageProps)
+  | ({
+      pageType: "release";
+      dehydratedState: DehydratedState;
+    } & ReleaseWithVersionPageProps)
   | {
       pageType: "contract";
       contractAddress: string;
       network: string;
       chainId: SUPPORTED_CHAIN_ID;
+      dehydratedState: DehydratedState;
     }
   | {
       pageType: "program";
       programAddress: string;
       network: DashboardSolanaNetwork;
+      dehydratedState: DehydratedState;
     };
 
 export const getStaticProps: GetStaticProps<PossiblePageProps> = async (
@@ -125,7 +136,7 @@ export const getStaticProps: GetStaticProps<PossiblePageProps> = async (
   if (networkOrAddress === "contracts") {
     return {
       redirect: {
-        destination: "/contracts",
+        destination: "/explore",
         permanent: false,
       },
     };
@@ -156,6 +167,18 @@ export const getStaticProps: GetStaticProps<PossiblePageProps> = async (
     };
   }
 
+  // handle deployer.web3sdkio.eth urls
+  if (networkOrAddress === "deployer.web3sdkio.eth") {
+    const pathSegments = ctx.params?.catchAll as string[];
+
+    return {
+      redirect: {
+        destination: `/web3sdkio.eth/${pathSegments.join("/")}`,
+        permanent: true,
+      },
+    };
+  }
+
   const queryClient = new QueryClient();
 
   // handle the case where the user is trying to access a EVM contract
@@ -163,9 +186,7 @@ export const getStaticProps: GetStaticProps<PossiblePageProps> = async (
     const [contractAddress] = ctx.params?.catchAll as string[];
 
     if (isPossibleEVMAddress(contractAddress)) {
-      await queryClient.prefetchQuery(ens.queryKey(contractAddress), () =>
-        ens.fetch(contractAddress),
-      );
+      await queryClient.prefetchQuery(ensQuery(contractAddress));
 
       return {
         props: {
@@ -220,8 +241,7 @@ export const getStaticProps: GetStaticProps<PossiblePageProps> = async (
 
     if (contractName) {
       const { address, ensName } = await queryClient.fetchQuery(
-        ens.queryKey(networkOrAddress),
-        () => ens.fetch(networkOrAddress),
+        ensQuery(networkOrAddress),
       );
 
       if (!address) {
@@ -240,17 +260,9 @@ export const getStaticProps: GetStaticProps<PossiblePageProps> = async (
       const release =
         allVersions.find((v) => v.version === version) || allVersions[0];
 
-      const ensQueries = [
-        queryClient.prefetchQuery(ens.queryKey(address), () =>
-          ens.fetch(address),
-        ),
-      ];
+      const ensQueries = [queryClient.prefetchQuery(ensQuery(address))];
       if (ensName) {
-        ensQueries.push(
-          queryClient.prefetchQuery(ens.queryKey(ensName), () =>
-            ens.fetch(ensName),
-          ),
-        );
+        ensQueries.push(queryClient.prefetchQuery(ensQuery(ensName)));
       }
 
       await Promise.all([
@@ -262,9 +274,7 @@ export const getStaticProps: GetStaticProps<PossiblePageProps> = async (
           ["publish-metadata", release.metadataUri],
           () => fetchContractPublishMetadataFromURI(release.metadataUri),
         ),
-        queryClient.prefetchQuery(["releaser-profile", address], () =>
-          fetchReleaserProfile(polygonSdk, address),
-        ),
+        queryClient.prefetchQuery(releaserProfileQuery(release.releaser)),
       ]);
 
       return {
@@ -295,12 +305,14 @@ function generateBuildTimePaths() {
   if (process.env.IGNORE_OFFICIAL_CONTRACT_PAGE) {
     return [];
   }
-  return Object.values(BuiltinContractMap)
-    .filter((c) => c.contractType !== "custom")
-    .map((v) => ({
+  const paths = getAllExploreReleases();
+  return paths.map((path) => {
+    const [networkOrAddress, contractId] = path.split("/");
+    return {
       params: {
-        networkOrAddress: "deployer.web3sdkio.eth",
-        catchAll: [v.id],
+        networkOrAddress,
+        catchAll: [contractId],
       },
-    }));
+    };
+  });
 }

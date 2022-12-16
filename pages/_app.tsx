@@ -1,91 +1,46 @@
 import chakraTheme from "../theme";
 import { ChakraProvider, theme } from "@chakra-ui/react";
 import { Global, css } from "@emotion/react";
-import { createSyncStoragePersister } from "@tanstack/query-sync-storage-persister";
-import { DehydratedState, Hydrate, QueryClient } from "@tanstack/react-query";
-import {
-  PersistQueryClientProvider,
-  Persister,
-} from "@tanstack/react-query-persist-client";
-import { shouldNeverPersistQuery } from "@web3sdkio/react";
-// import { AnnouncementBanner } from "components/notices/AnnouncementBanner";
-import { BigNumber } from "ethers";
-import { NextPage } from "next";
+import { IBM_Plex_Mono, Inter } from "@next/font/google";
+import type { DehydratedState } from "@tanstack/react-query";
 import PlausibleProvider from "next-plausible";
 import { DefaultSeo } from "next-seo";
 import type { AppProps } from "next/app";
 import { useRouter } from "next/router";
 import NProgress from "nprogress";
-import { PageId } from "page-id";
 import posthog from "posthog-js";
-import { ReactElement, ReactNode, useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import { generateBreakpointTypographyCssVars } from "tw-components/utils/typography";
-import { isBrowser } from "utils/isBrowser";
+import type { Web3sdkioNextPage } from "utils/types";
 
-const __CACHE_BUSTER = "v3.5.1";
+// eslint-disable-next-line new-cap
+const inter = Inter({
+  subsets: ["latin"],
+});
 
-export function bigNumberReplacer(_key: string, value: any) {
-  // if we find a BigNumber then make it into a string (since that is safe)
-  if (
-    BigNumber.isBigNumber(value) ||
-    (typeof value === "object" &&
-      value !== null &&
-      value.type === "BigNumber" &&
-      "hex" in value)
-  ) {
-    return BigNumber.from(value).toString();
-  }
+// eslint-disable-next-line new-cap
+const ibmPlexMono = IBM_Plex_Mono({
+  weight: ["400", "500", "600", "700"],
+  subsets: ["latin"],
+});
 
-  return value;
-}
+const chakraThemeWithFonts = {
+  ...chakraTheme,
+  fonts: {
+    ...chakraTheme.fonts,
+    heading: inter.style.fontFamily,
+    body: inter.style.fontFamily,
+    mono: ibmPlexMono.style.fontFamily,
+  },
+};
 
 const fontSizeCssVars = generateBreakpointTypographyCssVars();
-
-export type Web3sdkioNextPage = NextPage<any> & {
-  getLayout?: (page: ReactElement, pageProps?: any) => ReactNode;
-  pageId: PageId | ((pageProps: any) => PageId);
-};
 
 type AppPropsWithLayout = AppProps<{ dehydratedState?: DehydratedState }> & {
   Component: Web3sdkioNextPage;
 };
 
-const persister: Persister = createSyncStoragePersister({
-  storage: isBrowser() ? window.localStorage : undefined,
-  serialize: (data) => {
-    return JSON.stringify(
-      {
-        ...data,
-        clientState: {
-          ...data.clientState,
-          queries: data.clientState.queries.filter(
-            // covers solana as well as evm
-            (q) => !shouldNeverPersistQuery(q.queryKey),
-          ),
-        },
-      },
-      bigNumberReplacer,
-    );
-  },
-  key: `tw-query-cache`,
-});
-
 function ConsoleApp({ Component, pageProps }: AppPropsWithLayout) {
-  // has to be constructed in here because it may otherwise share state between SSR'd pages
-  const [queryClient] = useState(
-    () =>
-      new QueryClient({
-        defaultOptions: {
-          queries: {
-            // 24 hours
-            cacheTime: 1000 * 60 * 60 * 24,
-            // 30 seconds
-            staleTime: 1000 * 30,
-          },
-        },
-      }),
-  );
-
   const router = useRouter();
 
   useEffect(() => {
@@ -139,11 +94,19 @@ function ConsoleApp({ Component, pageProps }: AppPropsWithLayout) {
       autocapture: true,
       debug: false,
       capture_pageview: false,
+      disable_session_recording: true,
     });
     // register the git commit sha on all subsequent events
     posthog.register({
       tw_dashboard_version: process.env.NEXT_PUBLIC_VERCEL_GIT_COMMIT_SHA,
     });
+    // defere session recording start by 2 seconds because it synchronously loads JS
+    const t = setTimeout(() => {
+      posthog.startSessionRecording();
+    }, 2_000);
+    return () => {
+      clearTimeout(t);
+    };
   }, []);
   const pageId =
     typeof Component.pageId === "function"
@@ -181,7 +144,7 @@ function ConsoleApp({ Component, pageProps }: AppPropsWithLayout) {
             }
           `}
         />
-        <ChakraProvider theme={chakraTheme}>
+        <ChakraProvider theme={chakraThemeWithFonts}>
           <Component {...pageProps} />
         </ChakraProvider>
       </>
@@ -194,19 +157,8 @@ function ConsoleApp({ Component, pageProps }: AppPropsWithLayout) {
       customDomain="https://pl.web3sdk.io"
       selfHosted
     >
-      <PersistQueryClientProvider
-        client={queryClient}
-        persistOptions={{
-          persister,
-          buster: __CACHE_BUSTER,
-          dehydrateOptions: {
-            shouldDehydrateQuery: (q) => !shouldNeverPersistQuery(q.queryKey),
-          },
-        }}
-      >
-        <Hydrate state={pageProps.dehydratedState}>
-          <Global
-            styles={css`
+      <Global
+        styles={css`
             #walletconnect-wrapper {
               color: #000;
             }
@@ -254,48 +206,46 @@ function ConsoleApp({ Component, pageProps }: AppPropsWithLayout) {
                   -ms-transform: rotate(3deg) translate(0px, -4px);
                       transform: rotate(3deg) translate(0px, -4px);
           `}
-          />
-          <DefaultSeo
-            defaultTitle="web3sdkio: The complete web3 development framework"
-            titleTemplate="%s | web3sdkio"
-            description="Build web3 apps easily with web3sdkio's powerful SDKs, audited smart contracts, and developer tools—for Ethereum, Polygon, Solana, & more. Try now."
-            additionalLinkTags={[
-              {
-                rel: "icon",
-                href: "/favicon.ico",
-              },
-            ]}
-            openGraph={{
-              title: "web3sdkio: The complete web3 development framework",
-              description:
-                "Build web3 apps easily with web3sdkio's powerful SDKs, audited smart contracts, and developer tools—for Ethereum, Polygon, Solana, & more. Try now.",
-              type: "website",
-              locale: "en_US",
-              url: "https://web3sdk.io",
-              site_name: "web3sdkio",
-              images: [
-                {
-                  url: "https://web3sdk.io/web3sdkio.png",
-                  width: 1200,
-                  height: 630,
-                  alt: "web3sdkio",
-                },
-              ],
-            }}
-            twitter={{
-              handle: "@web3sdkio",
-              site: "@web3sdkio",
-              cardType: "summary_large_image",
-            }}
-            canonical={`https://web3sdk.io${router.asPath}`}
-          />
+      />
+      <DefaultSeo
+        defaultTitle="web3sdkio: The complete web3 development framework"
+        titleTemplate="%s | web3sdkio"
+        description="Build web3 apps easily with web3sdkio's powerful SDKs, audited smart contracts, and developer tools—for Ethereum, Polygon, Solana, & more. Try now."
+        additionalLinkTags={[
+          {
+            rel: "icon",
+            href: "/favicon.ico",
+          },
+        ]}
+        openGraph={{
+          title: "web3sdkio: The complete web3 development framework",
+          description:
+            "Build web3 apps easily with web3sdkio's powerful SDKs, audited smart contracts, and developer tools—for Ethereum, Polygon, Solana, & more. Try now.",
+          type: "website",
+          locale: "en_US",
+          url: "https://web3sdk.io",
+          site_name: "web3sdkio",
+          images: [
+            {
+              url: "https://web3sdk.io/web3sdkio.png",
+              width: 1200,
+              height: 630,
+              alt: "web3sdkio",
+            },
+          ],
+        }}
+        twitter={{
+          handle: "@web3sdkio",
+          site: "@web3sdkio",
+          cardType: "summary_large_image",
+        }}
+        canonical={`https://web3sdk.io${router.asPath}`}
+      />
 
-          <ChakraProvider theme={chakraTheme}>
-            {/* <AnnouncementBanner /> */}
-            {getLayout(<Component {...pageProps} />, pageProps)}
-          </ChakraProvider>
-        </Hydrate>
-      </PersistQueryClientProvider>
+      <ChakraProvider theme={chakraThemeWithFonts}>
+        {/* <AnnouncementBanner /> */}
+        {getLayout(<Component {...pageProps} />, pageProps)}
+      </ChakraProvider>
     </PlausibleProvider>
   );
 }

@@ -4,10 +4,11 @@ import { CTA } from "components/faucet/CTA";
 import { FaqSection } from "components/faucet/FAQSection";
 import { FormComponent } from "components/faucet/FormComponent";
 import { NextSeo } from "next-seo";
+// import dynamic from "next/dynamic";
 import { PageId } from "page-id";
-import { Web3sdkioNextPage } from "pages/_app";
-import { ReactElement, useState } from "react";
+import { useState } from "react";
 import { Heading } from "tw-components";
+import { Web3sdkioNextPage } from "utils/types";
 
 const SolanaFaucet: Web3sdkioNextPage = () => {
   const [transactionLink, setTransactionLink] = useState("");
@@ -49,8 +50,14 @@ const SolanaFaucet: Web3sdkioNextPage = () => {
   );
 };
 
-SolanaFaucet.getLayout = (page: ReactElement) => (
-  <AppLayout ecosystem="solana">{page}</AppLayout>
+// const AppLayout = dynamic(
+//   async () => (await import("components/app-layouts/app")).AppLayout,
+// );
+
+SolanaFaucet.getLayout = (page, props) => (
+  <AppLayout {...props} ecosystem="solana">
+    {page}
+  </AppLayout>
 );
 
 SolanaFaucet.pageId = PageId.FaucetSolana;

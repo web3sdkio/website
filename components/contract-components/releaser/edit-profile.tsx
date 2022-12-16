@@ -1,5 +1,4 @@
 import { useEditProfileMutation } from "../hooks";
-import { MaskedAvatar } from "./masked-avatar";
 import {
   Box,
   Flex,
@@ -29,6 +28,7 @@ import {
   FormLabel,
   Heading,
 } from "tw-components";
+import { MaskedAvatar } from "tw-components/masked-avatar";
 
 interface EditProfileProps {
   releaserProfile: ProfileMetadata;
@@ -124,7 +124,7 @@ export const EditProfile: React.FC<EditProfileProps> = ({
                 borderRadius="md"
                 position="relative"
                 role="group"
-                colorScheme="blue"
+                colorScheme="primary"
                 type="submit"
                 isLoading={editProfile.isLoading}
                 form={FORM_ID}

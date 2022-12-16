@@ -19,13 +19,14 @@ import {
 import { ContractIdImage } from "components/contract-components/shared/contract-id-image";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useSingleQueryParam } from "hooks/useQueryParam";
+// import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
 import { PageId } from "page-id";
-import { Web3sdkioNextPage } from "pages/_app";
-import { ReactElement, useEffect, useRef } from "react";
+import { useEffect, useRef } from "react";
 import { FiArrowLeft, FiCheckCircle, FiExternalLink } from "react-icons/fi";
 import { Card, Heading, LinkButton, Text, TrackedLink } from "tw-components";
 import { pushToPreviousRoute } from "utils/pushToPreviousRoute";
+import { Web3sdkioNextPage } from "utils/types";
 
 const ContractDeployDetailPage: Web3sdkioNextPage = () => {
   const router = useRouter();
@@ -136,8 +137,12 @@ const ContractDeployDetailPage: Web3sdkioNextPage = () => {
   );
 };
 
-ContractDeployDetailPage.getLayout = function getLayout(page: ReactElement) {
-  return <AppLayout>{page}</AppLayout>;
+// const AppLayout = dynamic(
+//   async () => (await import("components/app-layouts/app")).AppLayout,
+// );
+
+ContractDeployDetailPage.getLayout = function getLayout(page, props) {
+  return <AppLayout {...props}>{page}</AppLayout>;
 };
 
 ContractDeployDetailPage.pageId = PageId.DeploySingle;

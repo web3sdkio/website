@@ -5,105 +5,156 @@ import { useTrack } from "hooks/analytics/useTrack";
 import { useState } from "react";
 import { Card, CodeBlock, LinkButton } from "tw-components";
 
-const codeSnippets = {
-  javascript: `import { Web3sdkioSDK } from "@web3sdkio/sdk/evm";
+const landingSnippets = {
+  javascript: `import { Web3sdkioSDK } from "@web3sdkio/sdk";
 
-const sdk = new Web3sdkioSDK("goerli");
-const nftCollection = sdk.getNFTCollection("0xb1c42E0C4289E68f1C337Eb0Da6a38C4c9F3f58e");
+const sdk = new Web3sdkioSDK("mumbai");
+const contract = await sdk.getContract("0xe68904F3018fF980b6b64D06d7f7fBCeFF4cB06c");
 
-const nfts = await nftCollection.getAll();`,
-  react: `import {
-  Web3sdkioNftMedia,
-  useNFTCollection,
-  useNFTs,
-} from "@web3sdkio/react";
+const nfts = await contract.erc721.getAll();
+console.log(nfts);`,
+  react: `import { Web3sdkioNftMedia, useContract, useNFTs } from "@web3sdkio/react";
 
 export default function App() {
-  const nftCollection = useNFTCollection(
-    "0xb1c42E0C4289E68f1C337Eb0Da6a38C4c9F3f58e",
+  const { contract: nftDrop } = useContract(
+    "0xe68904F3018fF980b6b64D06d7f7fBCeFF4cB06c",
   );
-  const { data: nfts } = useNFTs(nftCollection);
+  const { data: nfts } = useNFTs(nftDrop);
 
   return (nfts || []).map((nft) => (
-    <div key={nft.metadata.id.toString()}>
-      <Web3sdkioNftMedia metadata={nft.metadata} />
-      <h3>{nft.metadata.name}</h3>
-    </div>
+    <Web3sdkioNftMedia key={nft.metadata.id.toString()} metadata={nft.metadata} />
   ));
 }`,
   python: `from web3sdkio import Web3sdkioSDK
 from pprint import pprint
 
-sdk = Web3sdkioSDK("goerli")
+sdk = Web3sdkioSDK("mumbai")
 
-nftCollection = sdk.get_nft_collection(
-    "0xb1c42E0C4289E68f1C337Eb0Da6a38C4c9F3f58e")
+nftCollection = sdk.get_nft_drop("0xe68904F3018fF980b6b64D06d7f7fBCeFF4cB06c")
 
 nfts = nftCollection.get_all()
-pprint(nfts)
-  `,
+pprint(nfts)`,
   go: `package main
 
 import (
+  "context"
   "encoding/json"
   "fmt"
-  "github.com/web3sdkio/go-sdk/web3sdkio"
+  "github.com/web3sdkio/go-sdk/v2/web3sdkio"
 )
 
 func main() {
-  sdk, _ := web3sdkio.NewWeb3sdkioSDK("goerli", nil)
+  sdk, _ := web3sdkio.NewWeb3sdkioSDK("mumbai", nil)
 
-  // Add your NFT Collection contract address here
-  address := "0xb1c42E0C4289E68f1C337Eb0Da6a38C4c9F3f58e"
-  nft, _ := sdk.GetNFTCollection(address)
+  // Add your NFT Drop contract address here
+  address := "0xe68904F3018fF980b6b64D06d7f7fBCeFF4cB06c"
+  nft, _ := sdk.GetNFTDrop(address)
 
   // Now you can use any of the read-only SDK contract functions
-  nfts, _ := nft.GetAll()
+  nfts, _ := nft.GetAll(context.Background())
 
   b, _ := json.MarshalIndent(nfts, "", "  ")
   fmt.Printf(string(b))
 }`,
+  unity: `using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using Web3sdkio;
+
+public class Example : MonoBehaviour {
+  void Start() {
+    Web3sdkioSDK sdk = new Web3sdkioSDK("goerli");
+    string address = "0xb1c42E0C4289E68f1C337Eb0Da6a38C4c9F3f58e";
+    NFTCollection nft = sdk.GetContract(address);
+    List<NFT> nfts = await contract.ERC721.GetAll()
+  }
+}`,
 };
 
-export const CodeSelector: React.FC = () => {
+const authSnippets = {
+  javascript: `import { Web3sdkioSDK } from "@web3sdkio/sdk/evm";
+
+const sdk = new Web3sdkioSDK("goerli");
+
+// Login with a single line of code
+const payload = await sdk.auth.login();
+
+// And verify the address of the logged in wallet
+const address = await sdk.auth.verify(payload);`,
+  react: `import { useSDK } from "@web3sdkio/react";
+
+export default function App() {
+ const sdk = useSDK();
+
+ async function login() {
+  // Login with a single line of code
+  const payload = await sdk.auth.login();
+
+  // And verify the address of the logged in wallet
+  const address = await sdk.auth.verify(payload);
+ }
+}`,
+  python: `from web3sdkio import Web3sdkioSDK
+
+sdk = Web3sdkioSDK("goerli")
+
+# Login with a single line of code
+payload = sdk.auth.login();
+
+# And verify the address of the logged in wallet
+address = sdk.auth.verify(payload);`,
+  go: `import "github.com/web3sdkio/go-sdk/web3sdkio"
+
+func main() {
+  sdk, err := web3sdkio.NewWeb3sdkioSDK("goerli", nil)
+
+  // Login with a single line of code
+  payload, err := sdk.Auth.Login()
+
+  // And verify the address of the logged in wallet
+  address, err := sdk.Auth.Verify(payload)
+}`,
+  unity: ``,
+};
+
+export interface CodeSelectorProps {
+  defaultLanguage?: CodeOptions;
+  snippets?: "landing" | "auth";
+  docs?: string;
+}
+
+export const CodeSelector: React.FC<CodeSelectorProps> = ({
+  defaultLanguage = "javascript",
+  snippets = "landing",
+  docs = "https://docs.web3sdk.io/",
+}) => {
   const [activeLanguage, setActiveLanguage] =
-    useState<CodeOptions>("javascript");
+    useState<CodeOptions>(defaultLanguage);
   const trackEvent = useTrack();
+
+  const actualSnippets =
+    snippets === "landing" ? landingSnippets : authSnippets;
+
   return (
     <>
       <SimpleGrid
         gap={{ base: 2, md: 3 }}
-        columns={{ base: 2, md: 4 }}
+        columns={{ base: 2, md: snippets === "landing" ? 5 : 4 }}
         justifyContent={{ base: "space-between", md: "center" }}
       >
-        <CodeOptionButton
-          setActiveLanguage={setActiveLanguage}
-          activeLanguage={activeLanguage}
-          language="javascript"
-        >
-          JavaScript
-        </CodeOptionButton>
-        <CodeOptionButton
-          setActiveLanguage={setActiveLanguage}
-          activeLanguage={activeLanguage}
-          language="python"
-        >
-          Python
-        </CodeOptionButton>
-        <CodeOptionButton
-          setActiveLanguage={setActiveLanguage}
-          activeLanguage={activeLanguage}
-          language="react"
-        >
-          React
-        </CodeOptionButton>
-        <CodeOptionButton
-          setActiveLanguage={setActiveLanguage}
-          activeLanguage={activeLanguage}
-          language="go"
-        >
-          Go
-        </CodeOptionButton>
+        {Object.keys(actualSnippets).map((key) =>
+          key === "unity" && snippets === "auth" ? null : (
+            <CodeOptionButton
+              key={key}
+              setActiveLanguage={setActiveLanguage}
+              activeLanguage={activeLanguage}
+              language={key as CodeOptions}
+              textTransform="capitalize"
+            >
+              {key === "javascript" ? "JavaScript" : key}
+            </CodeOptionButton>
+          ),
+        )}
       </SimpleGrid>
 
       <Card
@@ -119,8 +170,14 @@ export const CodeSelector: React.FC = () => {
           borderWidth={0}
           w="full"
           py={4}
-          code={codeSnippets[activeLanguage]}
-          language={activeLanguage === "react" ? "jsx" : activeLanguage}
+          code={actualSnippets[activeLanguage]}
+          language={
+            activeLanguage === "react"
+              ? "jsx"
+              : activeLanguage === "unity"
+              ? "cpp"
+              : activeLanguage
+          }
           backgroundColor="#0d0e10"
         />
       </Card>
@@ -132,27 +189,36 @@ export const CodeSelector: React.FC = () => {
         w="100%"
         maxW="container.sm"
       >
-        <LinkButton
-          role="group"
-          borderRadius="md"
-          p={6}
-          variant="gradient"
-          fromcolor="#1D64EF"
-          tocolor="#E0507A"
-          isExternal
-          colorScheme="primary"
-          w="full"
-          href={`https://replit.com/@web3sdkio/${activeLanguage}-sdk`}
-          rightIcon={
-            <Icon
-              color="#E0507A"
-              _groupHover={{ color: "#1D64EF" }}
-              as={SiReplDotIt}
-            />
-          }
-        >
-          <Box as="span">Try it on Replit</Box>
-        </LinkButton>
+        {snippets === "landing" && (
+          <LinkButton
+            role="group"
+            borderRadius="md"
+            p={6}
+            variant="gradient"
+            fromcolor="#1D64EF"
+            tocolor="#E0507A"
+            isExternal
+            colorScheme="primary"
+            w="full"
+            href={`https://replit.com/@web3sdkio/${activeLanguage}-sdk`}
+            rightIcon={
+              <Icon
+                color="#E0507A"
+                _groupHover={{ color: "#1D64EF" }}
+                as={SiReplDotIt}
+              />
+            }
+            onClick={() =>
+              trackEvent({
+                category: "code-selector",
+                action: "click",
+                label: "try-it",
+              })
+            }
+          >
+            <Box as="span">Try it on Replit</Box>
+          </LinkButton>
+        )}
         <LinkButton
           variant="outline"
           borderRadius="md"
@@ -163,7 +229,7 @@ export const CodeSelector: React.FC = () => {
           _hover={{
             bg: "whiteAlpha.800",
           }}
-          href="https://docs.web3sdk.io/"
+          href={docs}
           isExternal
           p={6}
           onClick={() =>

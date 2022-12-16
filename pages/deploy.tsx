@@ -1,10 +1,10 @@
-import { Web3sdkioNextPage } from "./_app";
 import { SimpleGrid } from "@chakra-ui/react";
 import { Hero } from "components/product-pages/common/Hero";
 import { ProductCard } from "components/product-pages/common/ProductCard";
 import { ProductPage } from "components/product-pages/common/ProductPage";
 import { PageId } from "page-id";
 import { Text } from "tw-components";
+import { Web3sdkioNextPage } from "utils/types";
 
 const Deploy: Web3sdkioNextPage = () => {
   return (
@@ -15,6 +15,7 @@ const Deploy: Web3sdkioNextPage = () => {
       }}
     >
       <Hero
+        trackingCategory="deploy"
         name="Deploy"
         title="The next-gen contract deployment flow."
         description="Deploy any smart contract with a single command. Get all the tools you need to get to success."

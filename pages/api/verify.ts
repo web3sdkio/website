@@ -1,11 +1,11 @@
 import {
+  Abi,
   ChainId,
   SUPPORTED_CHAIN_ID,
   extractConstructorParamsFromAbi,
   fetchSourceFilesFromMetadata,
   resolveContractUriFromAddress,
 } from "@web3sdkio/sdk/evm";
-import { Abi } from "components/contract-components/types";
 import { ethers, utils } from "ethers";
 import { StorageSingleton, getEVMWeb3sdkioSDK } from "lib/sdk";
 import { NextApiRequest, NextApiResponse } from "next";

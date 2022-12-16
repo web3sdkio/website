@@ -16,8 +16,8 @@ import {
   useDisclosure,
 } from "@chakra-ui/react";
 import { ChainId, useContract } from "@web3sdkio/react";
+import { Abi } from "@web3sdkio/sdk";
 import { SourcesPanel } from "components/contract-components/shared/sources-panel";
-import { Abi } from "components/contract-components/types";
 import { useContractSources } from "contract-ui/hooks/useContractSources";
 import { useRouter } from "next/router";
 import { VerificationStatus, blockExplorerMap } from "pages/api/verify";

@@ -14,7 +14,7 @@ import {
   Tr,
 } from "@chakra-ui/react";
 import { PublicKey } from "@solana/web3.js";
-import { useNFTs } from "@web3sdkio/react/solana";
+import { useNFTs, useTotalSupply } from "@web3sdkio/react/solana";
 import type { NFT } from "@web3sdkio/sdk";
 import type { NFTCollection, NFTDrop } from "@web3sdkio/sdk/solana";
 import { MediaCell } from "components/contract-pages/table/table-columns/cells/media-cell";
@@ -30,7 +30,8 @@ import {
   MdNavigateNext,
 } from "react-icons/md";
 import { CellProps, Column, usePagination, useTable } from "react-table";
-import { AddressCopyButton, Card, Heading, Text } from "tw-components";
+import { Card, Heading, Text } from "tw-components";
+import { AddressCopyButton } from "tw-components/AddressCopyButton";
 import { shortenIfAddress } from "utils/usedapp-external";
 
 export const NFTGetAllTable: React.FC<{
@@ -100,9 +101,9 @@ export const NFTGetAllTable: React.FC<{
   }, []);
 
   const [queryParams, setQueryParams] = useState({ count: 50, start: 0 });
+  const getAllQueryResult = useNFTs(program, queryParams);
+  const { data: totalCount } = useTotalSupply(program);
 
-  const getAllQueryResult = useNFTs(program);
-  const totalCount = getAllQueryResult.data ? getAllQueryResult.data.length : 0;
   const {
     getTableProps,
     getTableBodyProps,
@@ -121,18 +122,16 @@ export const NFTGetAllTable: React.FC<{
   } = useTable(
     {
       columns: tableColumns,
-      data:
-        getAllQueryResult.data?.slice(
-          queryParams.start,
-          queryParams.start + queryParams.count,
-        ) || [],
+      data: getAllQueryResult.data || [],
       initialState: {
         pageSize: queryParams.count,
         pageIndex: 0,
       },
       manualPagination: true,
       pageCount: Math.max(
-        Math.ceil(BigNumber.from(totalCount).toNumber() / queryParams.count),
+        Math.ceil(
+          BigNumber.from(totalCount || 0).toNumber() / queryParams.count,
+        ),
         1,
       ),
     },
@@ -166,7 +165,7 @@ export const NFTGetAllTable: React.FC<{
           tabs={drawerTabs}
         />
         <Table {...getTableProps()}>
-          <Thead bg="blackAlpha.50" _dark={{ bg: "whiteAlpha.50" }}>
+          <Thead>
             {headerGroups.map((headerGroup) => (
               // eslint-disable-next-line react/jsx-key
               <Tr {...headerGroup.getHeaderGroupProps()}>
@@ -191,12 +190,7 @@ export const NFTGetAllTable: React.FC<{
                 <Tr
                   {...row.getRowProps()}
                   role="group"
-                  _hover={{ bg: "blackAlpha.50" }}
-                  _dark={{
-                    _hover: {
-                      bg: "whiteAlpha.50",
-                    },
-                  }}
+                  _hover={{ bg: "accent.100" }}
                   // this is a hack to get around the fact that safari does not handle position: relative on table rows
                   style={{ cursor: "pointer" }}
                   onClick={() => setTokenRow(row.original)}

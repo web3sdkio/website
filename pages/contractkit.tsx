@@ -1,9 +1,9 @@
-import { Web3sdkioNextPage } from "./_app";
 import { SimpleGrid } from "@chakra-ui/react";
 import { Hero } from "components/product-pages/common/Hero";
 import { ProductCard } from "components/product-pages/common/ProductCard";
 import { ProductPage } from "components/product-pages/common/ProductPage";
 import { PageId } from "page-id";
+import { Web3sdkioNextPage } from "utils/types";
 
 const ContractExtensions: Web3sdkioNextPage = () => {
   return (
@@ -14,6 +14,7 @@ const ContractExtensions: Web3sdkioNextPage = () => {
       }}
     >
       <Hero
+        trackingCategory="contract_kit"
         name="ContractKit"
         title="Contract development made simple."
         description="Fast-track your contract development pipeline with our plug-and-play base contracts and extensions."

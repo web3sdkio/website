@@ -29,7 +29,8 @@ import {
   MdNavigateNext,
 } from "react-icons/md";
 import { CellProps, Column, usePagination, useTable } from "react-table";
-import { AddressCopyButton, Card, Heading, Text } from "tw-components";
+import { Card, Heading, Text } from "tw-components";
+import { AddressCopyButton } from "tw-components/AddressCopyButton";
 
 interface ContractOverviewNFTGetAllProps {
   contract: NFTContract;
@@ -168,7 +169,7 @@ export const NFTGetAllTable: React.FC<ContractOverviewNFTGetAllProps> = ({
           tabs={drawerTabs}
         />
         <Table {...getTableProps()}>
-          <Thead bg="blackAlpha.50" _dark={{ bg: "whiteAlpha.50" }}>
+          <Thead>
             {headerGroups.map((headerGroup) => (
               // eslint-disable-next-line react/jsx-key
               <Tr {...headerGroup.getHeaderGroupProps()}>
@@ -187,24 +188,23 @@ export const NFTGetAllTable: React.FC<ContractOverviewNFTGetAllProps> = ({
           </Thead>
           <Tbody {...getTableBodyProps()} position="relative">
             {page.map((row) => {
+              const failedToLoad = !row.original.metadata.uri;
               prepareRow(row);
               return (
                 // eslint-disable-next-line react/jsx-key
                 <Tr
                   {...row.getRowProps()}
                   role="group"
-                  _hover={{ bg: "blackAlpha.50" }}
-                  _dark={{
-                    _hover: {
-                      bg: "whiteAlpha.50",
-                    },
-                  }}
+                  _hover={{ bg: "accent.100" }}
                   // this is a hack to get around the fact that safari does not handle position: relative on table rows
                   style={{ cursor: "pointer" }}
                   onClick={() => setTokenRow(row.original)}
                   // end hack
                   borderBottomWidth={1}
                   _last={{ borderBottomWidth: 0 }}
+                  pointerEvents={failedToLoad ? "none" : "auto"}
+                  opacity={failedToLoad ? 0.3 : 1}
+                  cursor={failedToLoad ? "not-allowed" : "pointer"}
                 >
                   {row.cells.map((cell) => (
                     // eslint-disable-next-line react/jsx-key
@@ -213,7 +213,7 @@ export const NFTGetAllTable: React.FC<ContractOverviewNFTGetAllProps> = ({
                     </Td>
                   ))}
                   <Td borderBottomWidth="inherit">
-                    <Icon as={FiArrowRight} />
+                    {!failedToLoad && <Icon as={FiArrowRight} />}
                   </Td>
                 </Tr>
               );

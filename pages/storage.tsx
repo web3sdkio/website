@@ -1,9 +1,9 @@
-import { Web3sdkioNextPage } from "./_app";
 import { SimpleGrid } from "@chakra-ui/react";
 import { Hero } from "components/product-pages/common/Hero";
 import { ProductCard } from "components/product-pages/common/ProductCard";
 import { ProductPage } from "components/product-pages/common/ProductPage";
 import { PageId } from "page-id";
+import { Web3sdkioNextPage } from "utils/types";
 
 const Storage: Web3sdkioNextPage = () => {
   return (
@@ -14,6 +14,7 @@ const Storage: Web3sdkioNextPage = () => {
       }}
     >
       <Hero
+        trackingCategory="storage"
         name="Storage"
         title="Fast, reliable, decentralized storage"
         description="A blazing fast API for all your decentralized storage needs"

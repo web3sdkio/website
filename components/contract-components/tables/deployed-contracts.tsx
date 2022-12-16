@@ -35,22 +35,25 @@ import {
 } from "@web3sdkio/sdk/evm";
 import { ChakraNextImage } from "components/Image";
 import { useReleasesFromDeploy } from "components/contract-components/hooks";
+import { GettingStartedBox } from "components/getting-started/box";
+import { GettingStartedCard } from "components/getting-started/card";
 import { CONTRACT_TYPE_NAME_MAP, FeatureIconMap } from "constants/mappings";
 import { useRouter } from "next/router";
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import * as React from "react";
-import { FiPlus } from "react-icons/fi";
+import { FiArrowRight, FiPlus } from "react-icons/fi";
 import { IoFilterSharp } from "react-icons/io5";
 import { Column, useFilters, useGlobalFilter, useTable } from "react-table";
 import {
-  AddressCopyButton,
   Badge,
   Card,
   ChakraNextLink,
+  CodeBlock,
   Heading,
   LinkButton,
   Text,
 } from "tw-components";
+import { AddressCopyButton } from "tw-components/AddressCopyButton";
 import { ComponentWithChildren } from "types/component-with-children";
 import { getNetworkFromChainId } from "utils/network";
 import { shortenIfAddress } from "utils/usedapp-external";
@@ -68,17 +71,6 @@ export const DeployedContracts: React.FC<DeployedContractsProps> = ({
   limit = 10,
 }) => {
   const [showMoreLimit, setShowMoreLimit] = useState(limit);
-  const router = useRouter();
-
-  useEffect(() => {
-    if (
-      contractListQuery.isFetched &&
-      contractListQuery.data.length === 0 &&
-      router.asPath === "/dashboard"
-    ) {
-      router.replace("/contracts");
-    }
-  }, [contractListQuery, router]);
 
   const slicedData = useMemo(() => {
     if (contractListQuery.data) {
@@ -86,6 +78,8 @@ export const DeployedContracts: React.FC<DeployedContractsProps> = ({
     }
     return [];
   }, [contractListQuery.data, showMoreLimit]);
+
+  const router = useRouter();
 
   return (
     <>
@@ -106,7 +100,7 @@ export const DeployedContracts: React.FC<DeployedContractsProps> = ({
           <LinkButton
             leftIcon={<FiPlus />}
             colorScheme="primary"
-            href="/contracts"
+            href="/explore"
           >
             Deploy new contract
           </LinkButton>
@@ -125,7 +119,70 @@ export const DeployedContracts: React.FC<DeployedContractsProps> = ({
         {contractListQuery.data.length === 0 && contractListQuery.isFetched && (
           <Center>
             <Flex py={4} direction="column" gap={4} align="center">
-              <Text>No contracts found.</Text>
+              {router.pathname === "/dashboard" ? (
+                <GettingStartedBox title="No contracts found, yet!">
+                  <GettingStartedCard
+                    title="Explore"
+                    description={
+                      <>
+                        Browse a large collection of ready-to-deploy contracts
+                        built by web3sdkio and other contract developers. Find a
+                        contract for your app&apos; or game&apos;s use case.
+                      </>
+                    }
+                    icon={require("public/assets/product-icons/contracts.png")}
+                    linkProps={{
+                      category: "getting-started",
+                      label: "browse-contracts",
+                      href: "/explore",
+                      children: (
+                        <>
+                          Get Started <Icon as={FiArrowRight} />
+                        </>
+                      ),
+                    }}
+                  />
+                  <GettingStartedCard
+                    title="Build your own"
+                    description={
+                      <>
+                        Get started with <b>ContractKit</b> to create custom
+                        contracts specific to your use case.
+                      </>
+                    }
+                    icon={require("public/assets/product-icons/extensions.png")}
+                    linkProps={{
+                      category: "getting-started",
+                      label: "custom-contracts",
+                      href: "https://docs.web3sdk.io/contractkit",
+                      isExternal: true,
+                      children: (
+                        <>
+                          View Docs <Icon as={FiArrowRight} />
+                        </>
+                      ),
+                    }}
+                  />
+                  <GettingStartedCard
+                    title="Deploy from source"
+                    description={
+                      <>
+                        You are ready to deploy your contract with our
+                        interactive <b>CLI</b>.
+                      </>
+                    }
+                    icon={require("public/assets/product-icons/deploy.png")}
+                  >
+                    <CodeBlock
+                      mt="auto"
+                      language="bash"
+                      code="npx web3sdkio@latest deploy"
+                    />
+                  </GettingStartedCard>
+                </GettingStartedBox>
+              ) : (
+                <Text>No contracts found, yet!</Text>
+              )}
             </Flex>
           </Center>
         )}
@@ -297,7 +354,7 @@ export const ContractTable: ComponentWithChildren<ContractTableProps> = ({
         borderTopRadius="lg"
         overflow="hidden"
       >
-        <Thead bg="blackAlpha.50" _dark={{ bg: "whiteAlpha.50" }}>
+        <Thead>
           {headerGroups.map((headerGroup) => (
             // eslint-disable-next-line react/jsx-key
             <Tr {...headerGroup.getHeaderGroupProps()}>
@@ -327,12 +384,6 @@ export const ContractTable: ComponentWithChildren<ContractTableProps> = ({
               <Tr
                 {...row.getRowProps()}
                 role="group"
-                _hover={{ bg: "blackAlpha.50" }}
-                _dark={{
-                  _hover: {
-                    bg: "whiteAlpha.50",
-                  },
-                }}
                 // this is a hack to get around the fact that safari does not handle position: relative on table rows
                 style={{ cursor: "pointer" }}
                 onClick={() => {

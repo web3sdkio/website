@@ -3,8 +3,8 @@ const ContentSecurityPolicy = `
   img-src * data: blob:;
   media-src * data: blob:;
   object-src 'none';
-  style-src 'self' 'unsafe-inline' fonts.googleapis.com unpkg.com;
-  font-src 'self' fonts.gstatic.com;
+  style-src 'self' 'unsafe-inline';
+  font-src 'self';
   frame-src *;
   script-src 'self' 'unsafe-eval' 'unsafe-inline' *.web3sdk.io vercel.live;
   connect-src * data:;
@@ -34,6 +34,9 @@ const securityHeaders = [
   },
 ];
 
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const redirects = require("./redirects");
+
 /** @type {import('next').NextConfig} */
 const moduleExports = {
   async headers() {
@@ -46,70 +49,36 @@ const moduleExports = {
     ];
   },
   async redirects() {
+    return redirects();
+  },
+  async rewrites() {
     return [
       {
-        source: "/portal/:match*",
-        destination: "https://docs.web3sdk.io/:match*",
-        permanent: true,
+        source: "/web3sdkio.eth",
+        destination: "/deployer.web3sdkio.eth",
       },
       {
-        source: "/dashboard/publish/:path*",
-        destination: "/contracts/publish/:path*",
-        permanent: false,
-      },
-      {
-        source: "/dashboard/mumbai/publish/:path*",
-        destination: "/contracts/publish/:path*",
-        permanent: false,
-      },
-      {
-        source: "/privacy",
-        destination: "/web3sdkio_Privacy_Policy_May_2022.pdf",
-        permanent: false,
-      },
-      {
-        source: "/tos",
-        destination: "/Web3sdkio_Terms_of_Service.pdf",
-        permanent: false,
-      },
-      {
-        source: "/contracts/publish",
-        destination: "/contracts/release",
-        permanent: false,
-      },
-      {
-        source: "/authentication",
-        destination: "/auth",
-        permanent: false,
-      },
-      {
-        source: "/extensions",
-        destination: "/contractkit",
-        permanent: false,
-      },
-      //  old (deprecated) routes
-      {
-        source:
-          "/:network/(edition|nft-collection|token|pack|nft-drop|signature-drop|edition-drop|token-drop|marketplace|split|vote)/:address",
-        destination: "/:network/:address",
-        permanent: false,
-      },
-      // prebuilt contract deploys
-      {
-        source: "/contracts/new/:slug*",
-        destination: "/contracts",
-        permanent: false,
+        source: "/web3sdkio.eth/:path*",
+        destination: "/deployer.web3sdkio.eth/:path*",
       },
     ];
   },
   images: {
     dangerouslyAllowSVG: true,
     contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
-    domains: ["web3sdk.io", "docs.web3sdk.io", "blog.web3sdk.io"],
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "**.web3sdk.io",
+      },
+    ],
   },
   reactStrictMode: true,
   experimental: {
     scrollRestoration: true,
+  },
+  compiler: {
+    emotion: true,
   },
 };
 
@@ -138,7 +107,8 @@ const sentryWebpackPluginOptions = {
 
   hideSourceMaps: false,
 };
-module.exports = withPlausibleProxy({
+
+const enhancedModuleExports = withPlausibleProxy({
   customDomain: "https://pl.web3sdk.io",
   scriptName: "pl",
 })(
@@ -146,3 +116,5 @@ module.exports = withPlausibleProxy({
     withSentryConfig(moduleExports, sentryWebpackPluginOptions),
   ),
 );
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+module.exports = require("lodash.merge")(moduleExports, enhancedModuleExports);

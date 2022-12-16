@@ -1,11 +1,12 @@
 import { Flex, Link } from "@chakra-ui/react";
 import { AppLayout } from "components/app-layouts/app";
 import { DeployableContractTable } from "components/contract-components/contract-table";
+// import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
 import { PageId } from "page-id";
-import { Web3sdkioNextPage } from "pages/_app";
-import { ReactElement, useMemo } from "react";
+import { useMemo } from "react";
 import { Heading, Text } from "tw-components";
+import { Web3sdkioNextPage } from "utils/types";
 
 const ContractsDeployPage: Web3sdkioNextPage = () => {
   const router = useRouter();
@@ -24,7 +25,7 @@ const ContractsDeployPage: Web3sdkioNextPage = () => {
             Welcome to the new web3sdkio contract deployment flow.
             <br />
             <Link
-              color="primary.500"
+              color="blue.500"
               isExternal
               href="https://docs.web3sdk.io/deploy"
             >
@@ -39,8 +40,12 @@ const ContractsDeployPage: Web3sdkioNextPage = () => {
   );
 };
 
-ContractsDeployPage.getLayout = function getLayout(page: ReactElement) {
-  return <AppLayout>{page}</AppLayout>;
+// const AppLayout = dynamic(
+//   async () => (await import("components/app-layouts/app")).AppLayout,
+// );
+
+ContractsDeployPage.getLayout = function getLayout(page, props) {
+  return <AppLayout {...props}>{page}</AppLayout>;
 };
 
 ContractsDeployPage.pageId = PageId.DeployMultiple;

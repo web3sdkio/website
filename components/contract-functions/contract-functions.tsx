@@ -8,12 +8,14 @@ import {
   Tabs,
 } from "@chakra-ui/react";
 import type {
+  Abi,
   AbiEvent,
   AbiFunction,
   ValidContractInstance,
 } from "@web3sdkio/sdk/evm";
 import { SourcesPanel } from "components/contract-components/shared/sources-panel";
-import { Abi, SourceFile } from "components/contract-components/types";
+import { SourceFile } from "components/contract-components/types";
+import { CodeOverview } from "contract-ui/tabs/code/components/code-overview";
 import { Card, Heading } from "tw-components";
 
 interface ContractFunctionsOverview {
@@ -45,7 +47,7 @@ export const ContractFunctionsOverview: React.FC<ContractFunctionsOverview> = ({
 
   return (
     <Card as={Flex} flexDir="column" gap={2} p={0}>
-      <Tabs isLazy lazyBehavior="keepMounted" colorScheme="purple">
+      <Tabs isLazy lazyBehavior="keepMounted">
         <TabList px={0} borderBottomColor="borderColor" borderBottomWidth="1px">
           {functions && functions.length > 0 ? (
             <Tab gap={2}>
@@ -61,6 +63,13 @@ export const ContractFunctionsOverview: React.FC<ContractFunctionsOverview> = ({
               </Heading>
             </Tab>
           ) : null}
+          {abi && (
+            <Tab gap={2}>
+              <Heading color="inherit" my={1} size="label.lg">
+                Code
+              </Heading>
+            </Tab>
+          )}
           {sources && sources?.length > 0 && (
             <Tab gap={2}>
               <Heading color="inherit" my={1} size="label.lg">
@@ -86,6 +95,13 @@ export const ContractFunctionsOverview: React.FC<ContractFunctionsOverview> = ({
               />
             </TabPanel>
           ) : null}
+          {abi && (
+            <TabPanel px={0}>
+              <Flex direction="column" gap={6}>
+                <CodeOverview abi={abi} />
+              </Flex>
+            </TabPanel>
+          )}
           {(sources || abi) && (
             <TabPanel px={0}>
               <SourcesPanel sources={sources} abi={abi} />

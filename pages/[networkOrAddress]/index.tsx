@@ -1,37 +1,42 @@
+import redirects from "../../redirects";
 import { useMainnetsContractList } from "@3rdweb-sdk/react";
-import { Flex } from "@chakra-ui/react";
+import { Box, Flex } from "@chakra-ui/react";
 import { QueryClient, dehydrate } from "@tanstack/react-query";
+import { useAddress } from "@web3sdkio/react/evm";
 import { ChainId } from "@web3sdkio/sdk/evm";
 import { AppLayout } from "components/app-layouts/app";
 import {
-  ens,
+  ensQuery,
   fetchPublishedContracts,
-  fetchReleaserProfile,
+  releaserProfileQuery,
+  useEns,
   usePublishedContractsQuery,
   useReleaserProfile,
 } from "components/contract-components/hooks";
-import { ReleaserHeader } from "components/contract-components/releaser/releaser-header";
+import { EditProfile } from "components/contract-components/releaser/edit-profile";
+import { ReleaserAvatar } from "components/contract-components/releaser/masked-avatar";
+import { ReleaserSocials } from "components/contract-components/releaser/releaser-socials";
 import { DeployedContracts } from "components/contract-components/tables/deployed-contracts";
 import { ReleasedContracts } from "components/contract-components/tables/released-contracts";
 import { PublisherSDKContext } from "contexts/custom-sdk-context";
-import { useOgImagePing } from "hooks/useOgImagePing";
+import { getAllExplorePublishers } from "data/explore";
 import { useSingleQueryParam } from "hooks/useQueryParam";
 import { getEVMWeb3sdkioSDK } from "lib/sdk";
 import { GetStaticPaths, GetStaticProps } from "next";
 import { NextSeo } from "next-seo";
 import { useRouter } from "next/router";
+import { ProfileOG } from "og-lib/url-utils";
 import { PageId } from "page-id";
-import { Web3sdkioNextPage } from "pages/_app";
-import { createProfileOGUrl } from "pages/_og/profile";
-import { ReactElement, useEffect, useMemo } from "react";
+import { useEffect, useMemo } from "react";
 import { Heading, Text } from "tw-components";
 import { getSingleQueryValue } from "utils/router";
+import { Web3sdkioNextPage } from "utils/types";
 import { shortenIfAddress } from "utils/usedapp-external";
 
 const UserPage: Web3sdkioNextPage = () => {
   const wallet = useSingleQueryParam("networkOrAddress");
 
-  const ensQuery = ens.useQuery(wallet);
+  const ens = useEns(wallet);
 
   const router = useRouter();
 
@@ -47,35 +52,40 @@ const UserPage: Web3sdkioNextPage = () => {
     }
   }, [wallet, router]);
 
-  const releaserProfile = useReleaserProfile(
-    ensQuery.data?.address || undefined,
+  const releaserProfile = useReleaserProfile(ens.data?.address || undefined);
+
+  const displayName = shortenIfAddress(ens?.data?.ensName || wallet).replace(
+    "deployer.web3sdkio.eth",
+    "web3sdkio.eth",
   );
 
-  const displayName = shortenIfAddress(ensQuery?.data?.ensName || wallet);
-
-  const currentRoute = `https://web3sdk.io${router.asPath}`;
+  const currentRoute = `https://web3sdk.io${router.asPath}`.replace(
+    "deployer.web3sdkio.eth",
+    "web3sdkio.eth",
+  );
 
   const publishedContracts = usePublishedContractsQuery(
-    ensQuery.data?.address || undefined,
+    ens.data?.address || undefined,
   );
 
   const mainnetsContractList = useMainnetsContractList(
-    ensQuery.data?.address || undefined,
+    ens.data?.address || undefined,
   );
+
+  const address = useAddress();
 
   const ogImage = useMemo(() => {
     if (!releaserProfile.data || !publishedContracts.data) {
       return undefined;
     }
-    return createProfileOGUrl({
+
+    return ProfileOG.toUrl({
       displayName,
       bio: releaserProfile.data?.bio,
       avatar: releaserProfile.data?.avatar || undefined,
       releaseCnt: publishedContracts.data?.length.toString(),
     });
   }, [displayName, publishedContracts.data, releaserProfile.data]);
-
-  useOgImagePing(ogImage);
 
   return (
     <>
@@ -87,7 +97,7 @@ const UserPage: Web3sdkioNextPage = () => {
           images: ogImage
             ? [
                 {
-                  url: ogImage,
+                  url: ogImage.toString(),
                   alt: `${displayName}'s profile on web3sdk.io`,
                   width: 1200,
                   height: 630,
@@ -96,19 +106,63 @@ const UserPage: Web3sdkioNextPage = () => {
             : undefined,
           url: currentRoute,
         }}
+        canonical={currentRoute}
       />
 
       <Flex flexDir="column" gap={12}>
-        {wallet && <ReleaserHeader wallet={wallet} />}
+        {wallet && (
+          <Flex
+            direction={{ base: "column", md: "row" }}
+            justify="space-between"
+            w="full"
+            align="center"
+            gap={4}
+          >
+            <Flex gap={{ base: 4, md: 8 }} align="center" w="full">
+              <ReleaserAvatar
+                address={ens.data?.ensName || wallet}
+                boxSize={28}
+              />
+              <Flex direction="column" gap={0}>
+                <Heading
+                  as="h1"
+                  size="title.xl"
+                  color="white"
+                  _light={{ color: "black" }}
+                  _dark={{ color: "white" }}
+                >
+                  {displayName}
+                </Heading>
+                {releaserProfile.data?.bio && (
+                  <Text size="body.lg" noOfLines={2}>
+                    {releaserProfile.data.bio}
+                  </Text>
+                )}
+                {releaserProfile.data && (
+                  <ReleaserSocials
+                    mt={1}
+                    size="md"
+                    releaserProfile={releaserProfile.data}
+                  />
+                )}
+              </Flex>
+            </Flex>
+            {ens.data?.address === address && releaserProfile.data && (
+              <Box flexShrink={0}>
+                <EditProfile releaserProfile={releaserProfile.data} />
+              </Box>
+            )}
+          </Flex>
+        )}
         <Flex flexDir="column" gap={4}>
           <Flex gap={2} direction="column">
-            <Heading size="title.md">Released contracts</Heading>
+            <Heading size="title.md">Published contracts</Heading>
             <Text fontStyle="italic" maxW="container.md">
-              The list of contract instances that this wallet has released
+              All contracts published by this wallet
             </Text>
           </Flex>
-          {ensQuery.data?.address && (
-            <ReleasedContracts address={ensQuery.data?.address} noHeader />
+          {ens.data?.address && (
+            <ReleasedContracts address={ens.data?.address} noHeader />
           )}
         </Flex>
         <Flex flexDir="column" gap={4}>
@@ -126,7 +180,7 @@ const UserPage: Web3sdkioNextPage = () => {
               </Text>
             </Flex>
           </Flex>
-          {ensQuery.data?.address && (
+          {ens.data?.address && (
             <DeployedContracts
               noHeader
               contractListQuery={mainnetsContractList}
@@ -138,9 +192,13 @@ const UserPage: Web3sdkioNextPage = () => {
   );
 };
 
-UserPage.getLayout = function getLayout(page: ReactElement) {
+// const AppLayout = dynamic(
+//   async () => (await import("components/app-layouts/app")).AppLayout,
+// );
+
+UserPage.getLayout = function getLayout(page, props) {
   return (
-    <AppLayout>
+    <AppLayout {...props} noSEOOverride>
       <PublisherSDKContext>{page}</PublisherSDKContext>
     </AppLayout>
   );
@@ -150,6 +208,10 @@ UserPage.pageId = PageId.Profile;
 
 export default UserPage;
 
+const possibleRedirects = redirects().filter(
+  (r) => r.source.split("/").length === 2,
+);
+
 export const getStaticProps: GetStaticProps = async (ctx) => {
   const queryClient = new QueryClient();
   // TODO make this use alchemy / other RPC
@@ -158,47 +220,59 @@ export const getStaticProps: GetStaticProps = async (ctx) => {
 
   const networkOrAddress = getSingleQueryValue(ctx.params, "networkOrAddress");
 
+  const foundRedirect = possibleRedirects.find(
+    (r) => r.source.split("/")[1] === networkOrAddress,
+  );
+  if (foundRedirect) {
+    return {
+      redirect: {
+        destination: foundRedirect.destination,
+        permanent: foundRedirect.permanent,
+      },
+    };
+  }
+
   if (!networkOrAddress) {
     return {
       redirect: {
-        destination: "/contracts",
+        destination: "/explore",
         permanent: false,
       },
-      props: {},
+    };
+  }
+
+  // handle deployer.web3sdkio.eth urls
+  if (networkOrAddress === "deployer.web3sdkio.eth") {
+    return {
+      redirect: {
+        destination: "/web3sdkio.eth",
+        permanent: true,
+      },
     };
   }
 
   const { address, ensName } = await queryClient.fetchQuery(
-    ens.queryKey(networkOrAddress),
-    () => ens.fetch(networkOrAddress),
+    ensQuery(networkOrAddress),
   );
 
   if (!address) {
     return {
       redirect: {
-        destination: "/contracts",
+        destination: "/explore",
         permanent: false,
       },
       props: {},
     };
   }
 
-  const ensQueries = [
-    queryClient.prefetchQuery(ens.queryKey(address), () => ens.fetch(address)),
-  ];
+  const ensQueries = [queryClient.prefetchQuery(ensQuery(address))];
   if (ensName) {
-    ensQueries.push(
-      queryClient.prefetchQuery(ens.queryKey(ensName), () =>
-        ens.fetch(ensName),
-      ),
-    );
+    ensQueries.push(queryClient.prefetchQuery(ensQuery(ensName)));
   }
 
   await Promise.all([
     ...ensQueries,
-    queryClient.prefetchQuery(["releaser-profile", address], () =>
-      fetchReleaserProfile(polygonSdk, address),
-    ),
+    queryClient.prefetchQuery(releaserProfileQuery(address)),
     queryClient.prefetchQuery(["published-contracts", address], () =>
       fetchPublishedContracts(polygonSdk, queryClient, address),
     ),
@@ -214,6 +288,10 @@ export const getStaticProps: GetStaticProps = async (ctx) => {
 export const getStaticPaths: GetStaticPaths = async () => {
   return {
     fallback: "blocking",
-    paths: [{ params: { networkOrAddress: "deployer.web3sdkio.eth" } }],
+    paths: getAllExplorePublishers().map((networkOrAddress) => ({
+      params: {
+        networkOrAddress,
+      },
+    })),
   };
 };

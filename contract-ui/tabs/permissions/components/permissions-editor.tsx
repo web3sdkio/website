@@ -1,4 +1,7 @@
-import { AdminOnly, AdminOrSelfOnly } from "@3rdweb-sdk/react";
+import {
+  AdminOnly,
+  AdminOrSelfOnly,
+} from "@3rdweb-sdk/react/components/roles/admin-only";
 import {
   Flex,
   FormControl,
@@ -129,7 +132,7 @@ export const PermissionEditor: React.FC<PermissionEditorProps> = ({
                   size="sm"
                   borderLeftRadius="none"
                   borderRightRadius="md"
-                  colorScheme="blue"
+                  colorScheme="primary"
                   isDisabled={isDisabled}
                   onClick={addAddress}
                   height="100%"

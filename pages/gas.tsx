@@ -1,4 +1,3 @@
-import { Web3sdkioNextPage } from "./_app";
 import { useGas } from "@3rdweb-sdk/react/hooks/useGas";
 import { Flex, SimpleGrid, Switch } from "@chakra-ui/react";
 import { AppLayout } from "components/app-layouts/app";
@@ -6,8 +5,9 @@ import { GasEstimatorBox } from "components/gas-estimator/GasEstimatorBox";
 import { useTrack } from "hooks/analytics/useTrack";
 import { NextSeo } from "next-seo";
 import { PageId } from "page-id";
-import { ReactElement, useState } from "react";
+import { useState } from "react";
 import { Badge, Card, Heading, Text } from "tw-components";
+import { Web3sdkioNextPage } from "utils/types";
 
 const GasPage: Web3sdkioNextPage = () => {
   const [ethOrUsd, setEthOrUsd] = useState<"eth" | "usd">("eth");
@@ -103,8 +103,12 @@ const GasPage: Web3sdkioNextPage = () => {
   );
 };
 
-GasPage.getLayout = function getLayout(page: ReactElement) {
-  return <AppLayout>{page}</AppLayout>;
+// const AppLayout = dynamic(
+//   async () => (await import("components/app-layouts/app")).AppLayout,
+// );
+
+GasPage.getLayout = function getLayout(page, props) {
+  return <AppLayout {...props}>{page}</AppLayout>;
 };
 
 GasPage.pageId = PageId.GasEstimator;

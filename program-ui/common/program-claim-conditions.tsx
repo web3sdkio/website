@@ -26,7 +26,7 @@ import {
 } from "contract-ui/tabs/claim-conditions/components/claim-conditions";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useTxNotifications } from "hooks/useTxNotifications";
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 import { FiPlus } from "react-icons/fi";
 import {
@@ -84,7 +84,6 @@ const ClaimConditionsProgramForm: React.FC<{ address: string }> = ({
     if (!data) {
       return undefined;
     }
-
     return {
       startTime: data.startTime ? new Date(data.startTime) : new Date(),
       price: data.price.displayValue,
@@ -95,24 +94,15 @@ const ClaimConditionsProgramForm: React.FC<{ address: string }> = ({
     };
   }, [query.data]);
 
-  const {
-    register,
-    setValue,
-    getFieldState,
-    formState,
-    watch,
-    handleSubmit,
-    reset,
-  } = useForm<z.input<typeof NFTDropUpdateableConditionsInputSchema>>({
-    defaultValues: transformedQueryData,
-  });
-
-  useEffect(() => {
-    if (query.data && !formState.isDirty) {
-      reset(transformedQueryData);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [query.data, formState.isDirty]);
+  const { register, setValue, getFieldState, formState, watch, handleSubmit } =
+    useForm<z.input<typeof NFTDropUpdateableConditionsInputSchema>>({
+      defaultValues: transformedQueryData,
+      values: transformedQueryData,
+      resetOptions: {
+        keepDirty: true,
+        keepDirtyValues: true,
+      },
+    });
 
   const { onSuccess, onError } = useTxNotifications(
     "Saved claim conditions",
@@ -144,9 +134,10 @@ const ClaimConditionsProgramForm: React.FC<{ address: string }> = ({
               startTime: d.startTime,
               maxClaimable: d.maxClaimable,
               price: d.price,
-              ...(d.currencyAddress !== "SOLANA_NATIVE_TOKEN" && {
-                currencyAddress: d.currencyAddress,
-              }),
+              currencyAddress:
+                d.currencyAddress === "SOLANA_NATIVE_TOKEN"
+                  ? null
+                  : d.currencyAddress,
             });
             trackEvent({
               category: "nft",
@@ -262,15 +253,13 @@ const ClaimConditionsProgramForm: React.FC<{ address: string }> = ({
                       onChange={(e) =>
                         setValue(`currencyAddress`, e.target.value)
                       }
-                    />
-                    {/*                     <CurrencySelector
-                      // TODO get native_token_address
-                                                value={currencyAddress || NATIVE_TOKEN_ADDRESS}
-                      value={watch("currencyAddress") || ""}
-                      onChange={(e) =>
-                        setValue(`currencyAddress`, e.target.value)
+                      activeCurrency={
+                        transformedQueryData?.currencyAddress !==
+                        "SOLANA_NATIVE_TOKEN"
+                          ? transformedQueryData?.currencyAddress
+                          : undefined
                       }
-                    /> */}
+                    />
                     <FormErrorMessage>
                       {
                         getFieldState(`currencyAddress`, formState).error
@@ -328,8 +317,8 @@ const ClaimConditionsProgramForm: React.FC<{ address: string }> = ({
                       }
                     />
                     <FormHelperText>
-                      Determine the address that should receive the revenue from
-                      royalties earned from secondary sales of the assets.
+                      Determine the percentage you&apos;ll receive from
+                      secondary sales of the assets.
                     </FormHelperText>
                     <FormErrorMessage>
                       {
