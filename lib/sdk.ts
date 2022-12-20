@@ -1,7 +1,7 @@
 import {
+  ChainId,
   Web3sdkioSDK as EVMWeb3sdkioSDK,
   SUPPORTED_CHAIN_ID,
-  ChainId,
 } from "@web3sdkio/sdk/evm";
 import { Web3sdkioSDK as SOLWeb3sdkioSDK } from "@web3sdkio/sdk/solana";
 import { IpfsUploader, Web3sdkioStorage } from "@web3sdkio/storage";
@@ -26,8 +26,13 @@ export function replaceIpfsUrl(url: string) {
 // EVM SDK
 const EVM_SDK_MAP = new Map<SUPPORTED_CHAIN_ID, EVMWeb3sdkioSDK>();
 
-export function getEVMWeb3sdkioSDK(chainId: SUPPORTED_CHAIN_ID): EVMWeb3sdkioSDK {
-  if (process.env.NEXT_PUBLIC_SDK_POLYGON_CHAIN_ID && chainId === ChainId.Polygon) {
+export function getEVMWeb3sdkioSDK(
+  chainId: SUPPORTED_CHAIN_ID,
+): EVMWeb3sdkioSDK {
+  if (
+    process.env.NEXT_PUBLIC_SDK_POLYGON_CHAIN_ID &&
+    chainId === ChainId.Polygon
+  ) {
     chainId = parseInt(process.env.NEXT_PUBLIC_SDK_POLYGON_CHAIN_ID);
   }
   if (EVM_SDK_MAP.has(chainId)) {

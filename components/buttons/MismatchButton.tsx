@@ -24,10 +24,7 @@ import {
   useNetwork,
   useNetworkMismatch,
 } from "@web3sdkio/react";
-import {
-  useSDK,
-  useBalance as useSolBalance,
-} from "@web3sdkio/react/solana";
+import { useSDK, useBalance as useSolBalance } from "@web3sdkio/react/solana";
 import { SUPPORTED_CHAIN_ID } from "@web3sdkio/sdk/evm";
 import { BigNumber } from "ethers";
 import { useTrack } from "hooks/analytics/useTrack";
