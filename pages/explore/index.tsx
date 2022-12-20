@@ -89,7 +89,9 @@ export const getStaticProps: GetStaticProps<ExplorePageProps> = async () => {
 
   // pre load the data as well
   const queryClient = new QueryClient();
-  await Promise.all(categories.map((c) => prefetchCategory(c, queryClient)));
+  if (!process.env.IGNORE_OFFICIAL_CONTRACT_PAGE) {
+    await Promise.all(categories.map((c) => prefetchCategory(c, queryClient)));
+  }
 
   return {
     props: { categories, dehydratedState: dehydrate(queryClient) },
