@@ -35,12 +35,9 @@ const NFTS = {
     "NFT Collections, Editions, Drops and everything else NFT-related.",
   contracts: [
     "web3sdkio.eth/Multiwrap",
-    "doubledev.eth/ERC4907",
     "web3sdkio.eth/TokenERC721",
     "web3sdkio.eth/TokenERC1155",
-    "flairsdk.eth/ERC721CommunityStream",
     "web3sdkio.eth/Pack",
-    "unlock-protocol.eth/PublicLock",
     "web3sdkio.eth/DropERC721",
     "web3sdkio.eth/DropERC1155",
     "web3sdkio.eth/SignatureDrop",
