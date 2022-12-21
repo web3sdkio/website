@@ -168,18 +168,4 @@ export const RESOURCES: NavCardProps[] = [
     link: "https://docs.web3sdk.io",
     icon: require("public/assets/tw-icons/pack.png"),
   },
-  {
-    name: "Guides",
-    label: "guides",
-    description: "Learn how to build with web3sdkio",
-    link: "https://blog.web3sdk.io/guides",
-    icon: require("public/assets/tw-icons/edition.png"),
-  },
-  {
-    name: "Blog",
-    label: "blog",
-    description: "Our latest news and updates",
-    link: "https://blog.web3sdk.io",
-    icon: require("public/assets/tw-icons/datastore.png"),
-  },
 ];
