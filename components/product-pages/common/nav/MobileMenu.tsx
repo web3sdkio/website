@@ -41,11 +41,6 @@ export const MobileMenu: React.FC<IconButtonProps> = (props) => {
             links={RESOURCES}
             onItemClick={disclosure.onClose}
           />
-          <MobileNavSection
-            title="Solutions"
-            links={SOLUTIONS}
-            onItemClick={disclosure.onClose}
-          />
         </Flex>
       </Drawer>
     </>

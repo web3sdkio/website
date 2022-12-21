@@ -21,16 +21,7 @@ export const DesktopMenu: React.FC = () => {
         as="nav"
       >
         <HoverMenu title="Products" items={PRODUCTS} columns={2} />
-        <HoverMenu title="Solutions" items={SOLUTIONS} />
         <HoverMenu title="Resources" items={RESOURCES} />
-        <TrackedLink
-          isExternal
-          href="https://careers.web3sdk.io"
-          category="landing-page"
-          label="careers"
-        >
-          Careers
-        </TrackedLink>
       </Stack>
 
       <Flex
