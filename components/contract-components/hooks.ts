@@ -619,7 +619,11 @@ export function ensQuery(addressOrEnsName?: string) {
       if (!utils.isAddress(addressOrEnsName) && !isEnsName(addressOrEnsName)) {
         return placeholderData;
       }
-      const ethProvider = getEVMWeb3sdkioSDK(process.env.ENS_CHAIN_ID ? parseInt(process.env.ENS_CHAIN_ID) : ChainId.Mainnet).getProvider();
+      const ethProvider = getEVMWeb3sdkioSDK(
+        process.env.ENS_CHAIN_ID
+          ? parseInt(process.env.ENS_CHAIN_ID)
+          : ChainId.Mainnet,
+      ).getProvider();
       const ensName = isEnsName(addressOrEnsName)
         ? addressOrEnsName
         : await ethProvider.lookupAddress(addressOrEnsName);
