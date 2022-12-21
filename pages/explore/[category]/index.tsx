@@ -147,11 +147,9 @@ export const getStaticProps: GetStaticProps<ExplorePageProps> = async (ctx) => {
 
 export const getStaticPaths: GetStaticPaths = async () => {
   return {
-    paths: process.env.IGNORE_OFFICIAL_CONTRACT_PAGE
-      ? []
-      : ALL_CATEGORIES.map((category) => ({
-          params: { category },
-        })),
+    paths: process.env.IGNORE_OFFICIAL_CONTRACT_PAGE ? [] : ALL_CATEGORIES.map((category) => ({
+      params: { category },
+    })),
     fallback: false,
   };
 };

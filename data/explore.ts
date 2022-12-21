@@ -20,7 +20,6 @@ const POPULAR = {
   contracts: [
     "web3sdkio.eth/DropERC721",
     "web3sdkio.eth/Marketplace",
-    "unlock-protocol.eth/PublicLock",
     "web3sdkio.eth/DropERC1155",
     "web3sdkio.eth/SignatureDrop",
     "web3sdkio.eth/TokenERC20",
@@ -133,8 +132,8 @@ const CATEGORIES = {
   [DROPS.id]: DROPS,
   [GOVERNANCE.id]: GOVERNANCE,
   [AIRDROP.id]: AIRDROP,
-  [GAMING.id]: GAMING,
-  [COMMERCE.id]: COMMERCE,
+  // [GAMING.id]: GAMING,
+  // [COMMERCE.id]: COMMERCE,
 } as const;
 
 export function getCategory(id: string): ExploreCategory | null {
