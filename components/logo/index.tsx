@@ -23,7 +23,9 @@ export const Wordmark: React.FC<Omit<AspectRatioProps, "ratio">> = ({
 }) => {
   return (
     <AspectRatio ratio={1377 / 267} {...props}>
-      <Text style={{ fontSize: "22px", fontWeight: "bold", color: "#FFFFFF" }}>web3sdks</Text>
+      <Text style={{ fontSize: "22px", fontWeight: "bold", color: "#FFFFFF" }}>
+        web3sdks
+      </Text>
     </AspectRatio>
   );
 };
